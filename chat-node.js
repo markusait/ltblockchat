@@ -1,10 +1,8 @@
 let lotion = require('lotion');
-let genesis = require.resolve('./genesis.json');
-let keys = require.resolve('./priv_validator.json')
-console.log('genesis file:' + genesis);
 let lotionPort = 3000;
 let config = require('./config.js')
 let dev = process.env.DEV || false;
+console.log( config.peers);
 async function main() {
     /**
      * Lotion always runs on localhost - you will never access lotion
@@ -26,7 +24,6 @@ async function main() {
          */
         // genesis: './genesis.json',
         // keys: './priv_validator.json',
-        // lotionPort: lotionPort,
         p2pPort: 46656,
         tendermintPort: 46657,
         logTendermint: true,
@@ -36,19 +33,20 @@ async function main() {
          */
         initialState: {
             messages: [
-                { sender: 'Devslopes', message: 'secure chat' },
-                { sender: 'Devslopes', message: 'on the blockchain' },
-                { sender: 'Devslopes', message: 'endless uses' }
+                { sender: 'Markus', message: 'welcome' },
+                { sender: 'Markus', message: 'on the blockchain' },
+                { sender: 'Markus', message: 'endless uses' }
             ]
         }
     };
-    if (true) {
+    if (false) {
         // devMode on lotion creates a new app/GCI each run, then deletes all artifacts when killed
         // use devMode to test functionality of your code without worrying about validators
         // opts.devMode = true;
     } else {
         opts.genesis = './genesis.json'
         opts.keys = './priv_validator.json'
+        opts.peers = config.peers.map((addr) => `${addr}:46656`);
         /**
          * lotionOptions.keys is looking for a path for the private keys of the validator
          * that is running this app. You would never put this in source code. You would generate the keys
@@ -60,7 +58,6 @@ async function main() {
          * Do IP addresses only, no port ie 159.65.168.34
          */
          //removed peers for now!!!
-        // opts.peers = config.peers.map((addr) => `${addr}:46656`);
 
         /**
          * Possibly the most critical piece to the puzzle - the genesis.json

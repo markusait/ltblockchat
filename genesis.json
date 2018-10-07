@@ -1,0 +1,23 @@
+{
+  "app_hash": "b600cc693f96924721e7e55944663e41e6410fe24a1dfbbb9befe8368673a372",
+  "chain_id": "test-chain-OgmGOm",
+  "genesis_time": "2018-10-07T22:09:10.308916005+02:00",
+  "validators": [
+    {
+      "name": "",
+      "power": 10,
+      "pub_key": {
+        "type": "AC26791624DE60",
+        "value": "C7EvV7VComZe3vpqyIPWLAW4AvfYphftylwuYz4m9HU="
+      }
+    },
+    {
+      "name": "",
+      "power": 10,
+      "pub_key": {
+        "type": "AC26791624DE60",
+        "value": "zvWcalTUsTI2cMPrQmhE5VZ9+EmCNqHhbQqUynQIwlM="
+      }
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "app_hash": "",
+  "chain_id": "blockchat",
+  "genesis_time": "0001-01-01T00:00:00Z",
+  "validators": [
+    {
+      "name": "devslopes",
+      "power": 50,
+      "pub_key": {
+        "data": "7520E846D1285ED8E8C7B4875AF72DC1D0C6E953386FB0D0DE53AB16FB672901",
+        "type": "ed25519"
+      }
+    },
+    {
+      "name": "stuart",
+      "power": 10,
+      "pub_key": {
+        "data": "A3E15874E88F6458985903F19F1577479308E0042C5AEA4C931462E01C3734D4",
+        "type": "ed25519"
+      }
+    }
+  ]
+}

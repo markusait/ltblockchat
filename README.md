@@ -17,9 +17,11 @@ it is mostly based on this repo: https://github.com/devslopes/blockchat
 
 3. switch to branch "node2" on machine B
 
-4. run node chat-node.js on both machines
+4. put the ips of each node in config.js 
 
-5. open example.html with your browser of choice and start chatting!
+5. run node chat-node.js on both machines
+
+6. open example.html with your browser of choice and start chatting!
 
 
 

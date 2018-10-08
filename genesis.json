@@ -4,7 +4,7 @@
   "genesis_time": "2018-10-07T22:09:10.308916005+02:00",
   "validators": [
     {
-      "name": "",
+      "name": "Winkel",
       "power": 10,
       "pub_key": {
         "type": "AC26791624DE60",

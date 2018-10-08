@@ -2,7 +2,7 @@ let lotion = require('lotion');
 let lotionPort = 3000;
 let config = require('./config.js')
 let dev = process.env.DEV || false;
-console.log( config.peers);
+console.log(config.peers);
 async function main() {
     /**
      * Lotion always runs on localhost - you will never access lotion
@@ -24,9 +24,11 @@ async function main() {
          */
         // genesis: './genesis.json',
         // keys: './priv_validator.json',
-        p2pPort: 46656,
+        p2pPort: 43845,
+        peers: ['149.28.137.69:43845'],
         tendermintPort: 46657,
         logTendermint: true,
+        createEmptyBlocks: false,
         /**
          * If you ever change initial state, your app will have a new GCI - be very careful about changing
          * your initialState when you have existing validators - because it could break your app
@@ -46,7 +48,7 @@ async function main() {
     } else {
         opts.genesis = './genesis.json'
         opts.keys = './priv_validator.json'
-        opts.peers = config.peers.map((addr) => `${addr}:46656`);
+        // opts.peers = config.peers.map((addr) => `${addr}:43845`);
         /**
          * lotionOptions.keys is looking for a path for the private keys of the validator
          * that is running this app. You would never put this in source code. You would generate the keys

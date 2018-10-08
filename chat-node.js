@@ -46,7 +46,7 @@ async function main() {
         // opts.devMode = true;
     } else {
         opts.genesis = './genesis.json'
-        opts.keys = './priv_validator.json'
+        opts.keys = './priv_validator2.json'
         // opts.peers = config.peers.map((addr) => `${addr}:46656`);
         /**
          * lotionOptions.keys is looking for a path for the private keys of the validator

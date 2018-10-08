@@ -48,25 +48,7 @@ async function main() {
         opts.genesis = './genesis.json'
         opts.keys = './priv_validator.json'
         // opts.peers = config.peers.map((addr) => `${addr}:46656`);
-        /**
-         * lotionOptions.keys is looking for a path for the private keys of the validator
-         * that is running this app. You would never put this in source code. You would generate the keys
-         * and then manually place that json file here in the project. It can have any name or path.
-         */
-        // opts.keys = keys;
-        /**
-         * Pass in an array of validator nodes IP addresses
-         * Do IP addresses only, no port ie 159.65.168.34
-         */
-         //removed peers for now!!!
 
-        /**
-         * Possibly the most critical piece to the puzzle - the genesis.json
-         * The unique app ID (GCI) is based on initialState and genesis.json
-         * If the main repo's genesis.json file EVER CHANGES - you must quickly
-         * update the source code of every validator node to have the new genesis.json
-         */
-         // opts.genesis = genesis;
     }
     /**
      * Create a new instance of Lotion

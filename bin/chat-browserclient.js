@@ -20,32 +20,26 @@ async function main() {
          * tendermint port 46657 to the end. ws means connect via websockets
          * this step is required in order for connect to work
          */
-        let nodes = 'ws://138.201.93.202:46657'
+        let nodes = 'ws://localhost:46657'
 
         //all clients share the same genesis file
+        // TODO: acutally load the file
         let genesis = {
           "app_hash": "b600cc693f96924721e7e55944663e41e6410fe24a1dfbbb9befe8368673a372",
           "chain_id": "test-chain-OgmGOm",
           "genesis_time": "2018-10-07T22:09:10.308916005+02:00",
           "validators": [
             {
-              "name": "",
+              "name": "Winkel",
               "power": 10,
               "pub_key": {
                 "type": "AC26791624DE60",
-                "value": "C7EvV7VComZe3vpqyIPWLAW4AvfYphftylwuYz4m9HU="
-              }
-            },
-            {
-              "name": "",
-              "power": 10,
-              "pub_key": {
-                "type": "AC26791624DE60",
-                "value": "zvWcalTUsTI2cMPrQmhE5VZ9+EmCNqHhbQqUynQIwlM="
+                "value": "hNER7QpFepPULZU1HI4QwEdBrWT0ttCfegggEICt1y8="
               }
             }
           ]
         }
+
         // let { send, state } = await connect(null, { genesis, nodes}); not working
         /**
          * Use Javascript object literal syntax to grab the current state of the data in the blockchain
@@ -55,7 +49,7 @@ async function main() {
 
         let { send } = await connect(null, {
         genesis: genesis,
-        nodes: [ 'ws://138.201.93.202:46657' ]
+        nodes: [ 'ws://localhost:46657' ]
         })
         /**
          * This listens for when a user presses enter on the shell after
@@ -70,10 +64,10 @@ async function main() {
 
           // when user hits enter message is sent
           message.addEventListener('keydown', (e) => {
-           if(message.value){
-              sendMessage(username.value, 'killed node 1/2/3')
-
-            }
+           // if(message.value ==='kill node 1'){
+           //    sendMessage(username.value, 'killed node 1/2/3')
+           //
+           //  }
            if(e.keyCode === 13) {
              sendMessage(username.value, message.value)
              message.value = ""
@@ -89,13 +83,13 @@ async function main() {
          })
          async function sendMessage(username, message) {
                const result = await send({sender: username, message: message})
-               console.log(await result);
+
          }
         let lastMessagesLength = 0
         //instead of setInterval one could use sockets to update the state
         async function updateState() {
-          // let { data } = await axios.get('http://localhost:' + 3001 + '/data')
-          let messages = await axios.get('http://localhost:' + 3001 + '/data').then(res => res.data)
+          // let messages = await axios.get('http://localhost:' + 3000 + '/state').then(res => res.data)
+          let { data } = await axios.get('http://localhost:' + 3000 + '/state')
           let messages = await data.messages
           if (messages !== undefined && messages.length >= lastMessagesLength) {
             for (let i = lastMessagesLength; i < messages.length; i++) {

@@ -6,16 +6,17 @@ this is a simple chatapp based on lotion and awesome tendermint
 
 **Getting Started**
 
-install dependencies
+1. install dependencies
 
 `npm i lotion`
 
 
-switch to branch "node2" on machine A
+2. switch to branch "node1" on machine A
 
-switch to branch "node2" on machine B
+3. switch to branch "node2" on machine B
 
+4. run node chat-node.js on both machines
 
-open chat-browserclient.js with your browser of choice and start chatting!
+5. open chat-browserclient.js with your browser of choice and start chatting!
 
 Note: only branch master with 1 node works currently

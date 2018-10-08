@@ -5,7 +5,7 @@
   "validators": [
     {
       "name": "Winkel",
-      "power": 100,
+      "power": 10,
       "pub_key": {
         "type": "AC26791624DE60",
         "value": "hNER7QpFepPULZU1HI4QwEdBrWT0ttCfegggEICt1y8="

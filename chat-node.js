@@ -27,6 +27,7 @@ async function main() {
         p2pPort: 46656,
         tendermintPort: 46657,
         logTendermint: true,
+        createEmptyBlocks: false,
         /**
          * If you ever change initial state, your app will have a new GCI - be very careful about changing
          * your initialState when you have existing validators - because it could break your app

@@ -2,6 +2,7 @@
 
 this is a simple chatapp based on lotion and awesome tendermint
 
+it is mostly based on this repo: https://github.com/devslopes/blockchat
 ---
 
 **Getting Started**
@@ -17,6 +18,8 @@ this is a simple chatapp based on lotion and awesome tendermint
 
 4. run node chat-node.js on both machines
 
-5. open chat-browserclient.js with your browser of choice and start chatting!
+5. open example.html with your browser of choice and start chatting!
+
+
 
 Note: only branch master with 1 node works currently

@@ -51,7 +51,7 @@ async function main() {
         genesis: genesis,
         nodes: [ 'ws://localhost:46657' ]
         })
-        let { data } =  await axios.get('http://localhost:' + 3001 + '/data')
+        let { data } =  await axios.get('http://localhost:' + 3000 + '/state')
         console.log(await data);
         console.log('connected');
         clearTimeout(timeout);
@@ -170,7 +170,7 @@ async function main() {
 
         let lastMessagesLength = 0
         async function updateState() {
-          let { data } = await axios.get('http://localhost:' + 3001 + '/data')
+          let { data } = await axios.get('http://localhost:' + 3000 + '/state')
           let messages = await data.messages
           if (messages !== undefined) {
             for (let i = lastMessagesLength; i < messages.length; i++) {

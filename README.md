@@ -3,6 +3,7 @@
 this is a simple chatapp based on lotion and awesome tendermint
 
 it is mostly based on this repo: https://github.com/devslopes/blockchat
+
 ---
 
 **Getting Started**

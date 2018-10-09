@@ -24803,8 +24803,6 @@ const secp256k1 = require('secp256k1')
 const { randomBytes } = require('crypto')
 const createHash = require('sha.js')
 const crypto = require("crypto")
-
-
 const port = 3000;
 //TODO
 //1. add to server and make cors possible
@@ -24946,25 +24944,6 @@ async function main() {
             };
         })()
 
-        // let privKey = generatePrivateKey()
-        // let pubKey = generatePublicKey(privKey)
-        // let passsword = pubKey.slice(0,32)
-        //
-        // var story = "this is the story of the brave prince who went off to fight the horrible dragon... he set out on his quest one sunny day";
-        // var algorithm = "aes256"
-        //
-        // encryptionHelper.getKeyAndIV(passsword, function (data) { //using 32 byte key
-        //     var encText = encryptionHelper.encryptText(algorithm, data.key, data.iv, story, "base64");
-        //     console.log("encrypted text = " + encText);
-        //     var decText = encryptionHelper.decryptText(algorithm, data.key, data.iv, encText, "base64");
-        //     console.log("decrypted text = " + decText);
-        //
-        // });
-
-
-
-
-
         genKeys.addEventListener('click', () => {
           let privKeyOutput = generatePrivateKey()
           let pubKeyOutput =  generatePublicKey(privKeyOutput)
@@ -24996,10 +24975,7 @@ async function main() {
             let privKey = document.getElementById('privKey').textContent
             let pubKey = document.getElementById('pubKey').textContent
             let passsword = pubKey.slice(0,32)
-            // console.log(privKey, pubKey)
-            // console.log(message)
             let { txHash } = signTx(privKey, { sender: pubKey, message: message })
-
             encryptionHelper.getKeyAndIV(passsword, async function (data) {
                 let encText = encryptionHelper.encryptText("aes256", data.key, data.iv, message, "base64");
                 const result = await send({
@@ -25013,8 +24989,11 @@ async function main() {
               message: message
             })
           }
-
         }
+        function decryptText(text, pubKey){
+           var decText = encryptionHelper.decryptText(algorithm, data.key, data.iv, encText, "base64");
+        }
+
         let lastMessagesLength = 0
         //instead of setInterval one could use sockets to update the state
         async function updateState() {

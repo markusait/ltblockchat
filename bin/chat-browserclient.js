@@ -4,8 +4,6 @@ const secp256k1 = require('secp256k1')
 const { randomBytes } = require('crypto')
 const createHash = require('sha.js')
 const crypto = require("crypto")
-
-
 const port = 3000;
 //TODO
 //1. add to server and make cors possible
@@ -146,25 +144,6 @@ async function main() {
                 decryptText: decryptText
             };
         })()
-
-        // let privKey = generatePrivateKey()
-        // let pubKey = generatePublicKey(privKey)
-        // let passsword = pubKey.slice(0,32)
-        //
-        // var story = "this is the story of the brave prince who went off to fight the horrible dragon... he set out on his quest one sunny day";
-        // var algorithm = "aes256"
-        //
-        // encryptionHelper.getKeyAndIV(passsword, function (data) { //using 32 byte key
-        //     var encText = encryptionHelper.encryptText(algorithm, data.key, data.iv, story, "base64");
-        //     console.log("encrypted text = " + encText);
-        //     var decText = encryptionHelper.decryptText(algorithm, data.key, data.iv, encText, "base64");
-        //     console.log("decrypted text = " + decText);
-        //
-        // });
-
-
-
-
 
         genKeys.addEventListener('click', () => {
           let privKeyOutput = generatePrivateKey()

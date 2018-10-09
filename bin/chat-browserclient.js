@@ -8,13 +8,11 @@ const port = 3000;
 //TODO
 //1. add to server and make cors possible
 // 2. connect different nodes
-// add socet connection?
-// add another encryption layer
+// add socket connection?
 // search for chatbot api
 // search for how to push down nodes!
 // show block height? and make tendermint mine empty blocks false
 // make text for which node to trust
-// make intro
 // find a nice blockexplorer?
 
 
@@ -68,12 +66,7 @@ async function main() {
             feedback = document.getElementById('feedback'),
             privKey = document.getElementById('privKey'),
             pubKey = document.getElementById('pubKey'),
-            genKeys = document.getElementById('genKeys'),
-            checkbox = document.querySelector("input[name=checkbox]");
-
-
-
-
+            genKeys = document.getElementById('genKeys')
         //crypto part
         //managing keys and Tx signing
 
@@ -158,25 +151,43 @@ async function main() {
             //    sendMessage(username.value, 'killed node 1/2/3')
             //
             //  }
-            if (e.keyCode === 13) {
-                sendMessage(username.value, message.value)
+            if (e.keyCode === 13 && message.value.length >= 1 && message.value !== '') {
+                let type = document.getElementById('slct')
+                let messageType = type.options[type.selectedIndex].value
+                sendMessage(username.value, message.value, messageType)
                 message.value = ""
             }
-
         })
         //when user clicks send button message is sent
         btn.addEventListener('click', () => {
-            if (message.value && message.value.length >= 1 && message.value !== '') {
-                sendMessage(username.value, message.value)
-                message.value = "";
+            if (message.value.length >= 1 && message.value !== '') {
+              let type = document.getElementById('slct')
+              let messageType = type.options[type.selectedIndex].value
+              sendMessage(username.value, message.value, messageType)
+              message.value = ""
             }
         })
-        async function sendMessage(username, message) {
-          if (checkbox.checked) {
-            let privKey = document.getElementById('privKey').textContent
-            let pubKey = document.getElementById('pubKey').textContent
+        async function sendMessage(username, message, messageType) {
+          switch (messageType){
+            case 'normalMessage':
+              let result = await send({
+                sender: username,
+                message: encText
+              })
+            break
+            case 'hashMessage':
+              let { txHash } = signTx(privKey, { sender: pubKey, message: message })
+                result = await send({
+                sender: username,
+                message: txHash
+              })
+              break
+            case 'signMessage':
+            let privKeyOutput = generatePrivateKey()
+            let pubKeyOutput =  generatePublicKey(privKeyOutput)
+            privKey.innerHTML = privKeyOutput
+            pubKey.innerHTML = pubKeyOutput
             let passsword = pubKey.slice(0,32)
-            let { txHash } = signTx(privKey, { sender: pubKey, message: message })
             encryptionHelper.getKeyAndIV(passsword, async function (data) {
                 let encText = encryptionHelper.encryptText("aes256", data.key, data.iv, message, "base64");
                 const result = await send({
@@ -184,13 +195,9 @@ async function main() {
                   message: encText
                 })
             })
-          } else {
-            const result = await send({
-              sender: username,
-              message: message
-            })
-          }
-        }
+            break
+          }}
+
         function decryptText(text, pubKey){
            var decText = encryptionHelper.decryptText(algorithm, data.key, data.iv, encText, "base64");
         }

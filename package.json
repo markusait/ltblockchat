@@ -35,6 +35,7 @@
     "minimist": "^1.2.0",
     "readline": "^1.3.0",
     "secp256k1": "^3.5.2",
+    "shea": "0.0.15",
     "swearjar": "^0.2.0",
     "tenderkeys.js": "0.0.6",
     "tendermint-crypto": "0.0.1"

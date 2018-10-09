@@ -8,10 +8,20 @@
         <link href="./style.css" rel="stylesheet" />
     </head>
     <body>
-        <div class="block" >
-          <p id ="privKey"> </p><button id="genPrivKey"> generate a Private Key </button>
+        <div class="block" id="cryptoKeys" >
+          <h2>Private Key</h2>
+          <p id ="privKey"> </p>
           <br />
-          <p id= "pubKey">  </p><button id="genPubKey"> generate a Public Key </button>
+          <h2>Public Key</h2>
+          <p id= "pubKey">  </p>
+          <button id="genKeys"> generate Keys </button>
+        </div>
+          <div class="block" id="signing" >
+          <h2>Enable Transaction Signing</h2>
+              <label class="switch">
+                <input type="checkbox" name="checkbox" checked>
+                <span class="slider round"></span>
+              </label>
         </div>
         <div class="block">
             <h2>Tendermint Chat App</h2>

@@ -74,7 +74,7 @@ async function main() {
         if (
             typeof tx.sender === 'string' &&
             typeof tx.message === 'string' &&
-            tx.message.length <= 50
+            tx.message.length <= 1000
         ) {
             if (tx.message !== '') {
                 state.messages.push({

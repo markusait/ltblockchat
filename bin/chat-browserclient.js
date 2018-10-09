@@ -2,6 +2,8 @@ const axios = require('axios');
 const connect = require('lotion-connect')
 const secp256k1 = require('secp256k1')
 const { randomBytes } = require('crypto')
+const createHash = require('sha.js')
+const crypto = require("crypto")
 
 
 const port = 3000;
@@ -23,6 +25,8 @@ const port = 3000;
 // var privateKey = generatePrivateKey()
 // console.log(privateKey);
 // console.log(generatePublicKey(privateKey));
+
+
 async function main() {
     try {
         /**
@@ -66,10 +70,15 @@ async function main() {
             feedback = document.getElementById('feedback'),
             privKey = document.getElementById('privKey'),
             pubKey = document.getElementById('pubKey'),
-            genPrivKey = document.getElementById('genPrivKey'),
-            genPubKey = document.getElementById('genPubKey')
+            genKeys = document.getElementById('genKeys'),
+            checkbox = document.querySelector("input[name=checkbox]");
 
-        // when user hits enter message is sent
+
+
+
+        //crypto part
+        //managing keys and Tx signing
+
         let generatePrivateKey = () => {
           let privKey
           do {
@@ -82,16 +91,89 @@ async function main() {
           let priv = Buffer.from(privKey, 'hex');
           return secp256k1.publicKeyCreate(priv).toString('hex')
         }
-        genPrivKey.addEventListener('click', () => {
-          let privKeyOutput = generatePrivateKey()
-          privKey.innerHTML = privKeyOutput
-        })
 
-        genPubKey.addEventListener('click', () => {
-          let pubKeyOutput = generatePublicKey(privKey)
+        let toBuffer = (data) => {
+          return Buffer.from(data, 'hex')
+        }
+
+        let hashTx = (tx) => {
+          let jtx = JSON.stringify(tx)
+          return createHash('sha256').update(jtx).digest()
+        }
+
+        let signTx = (privKey, tx) => {
+          //first we hash the Tx
+          let txHash = hashTx(tx)
+          //now we sign the hash value by calling sign method of elipticcurv
+          //note: we pas priv Key as string so we need to convert to buffer
+          let { signature } = secp256k1.sign(txHash, toBuffer(privKey))
+          //make copy of tx now
+          let signedTx = Object.assign({}, tx)
+          //now the Tx ha all 5 fields including the signature
+          signedTx.signature = signature.toString('hex')
+          signedTx.txHash = txHash.toString('hex')
+          console.log(txHash.toString('hex'));
+          return signedTx
+        }
+
+        let encryptionHelper = ( () => {
+            function getKeyAndIV(key, callback) {
+                crypto.pseudoRandomBytes(16, function (err, ivBuffer) {
+                    var keyBuffer  = (key instanceof Buffer) ? key : new Buffer(key) ;
+                    callback({
+                        iv: ivBuffer,
+                        key: keyBuffer
+                    });
+                });
+            }
+            let encryptText = (cipher_alg, key, iv, text, encoding) => {
+                var cipher = crypto.createCipheriv(cipher_alg, key, iv);
+                encoding = encoding || "binary";
+                var result = cipher.update(text, "utf8", encoding);
+                result += cipher.final(encoding);
+                return result;
+            }
+            let decryptText = (cipher_alg, key, iv, text, encoding) => {
+                var decipher = crypto.createDecipheriv(cipher_alg, key, iv);
+                encoding = encoding || "binary";
+                var result = decipher.update(text, encoding);
+                result += decipher.final();
+                return result;
+            }
+            return {
+                getKeyAndIV: getKeyAndIV,
+                encryptText: encryptText,
+                decryptText: decryptText
+            };
+        })()
+
+        // let privKey = generatePrivateKey()
+        // let pubKey = generatePublicKey(privKey)
+        // let passsword = pubKey.slice(0,32)
+        //
+        // var story = "this is the story of the brave prince who went off to fight the horrible dragon... he set out on his quest one sunny day";
+        // var algorithm = "aes256"
+        //
+        // encryptionHelper.getKeyAndIV(passsword, function (data) { //using 32 byte key
+        //     var encText = encryptionHelper.encryptText(algorithm, data.key, data.iv, story, "base64");
+        //     console.log("encrypted text = " + encText);
+        //     var decText = encryptionHelper.decryptText(algorithm, data.key, data.iv, encText, "base64");
+        //     console.log("decrypted text = " + decText);
+        //
+        // });
+
+
+
+
+
+        genKeys.addEventListener('click', () => {
+          let privKeyOutput = generatePrivateKey()
+          let pubKeyOutput =  generatePublicKey(privKeyOutput)
+          privKey.innerHTML = privKeyOutput
           pubKey.innerHTML = pubKeyOutput
         })
 
+        // when user hits enter message is sent
         message.addEventListener('keydown', (e) => {
             // if(message.value ==='kill node 1'){
             //    sendMessage(username.value, 'killed node 1/2/3')
@@ -111,12 +193,29 @@ async function main() {
             }
         })
         async function sendMessage(username, message) {
-            const result = await send({
-                sender: username,
-                message: message
+          if (checkbox.checked) {
+            let privKey = document.getElementById('privKey').textContent
+            let pubKey = document.getElementById('pubKey').textContent
+            let passsword = pubKey.slice(0,32)
+            let { txHash } = signTx(privKey, { sender: pubKey, message: message })
+            encryptionHelper.getKeyAndIV(passsword, async function (data) {
+                let encText = encryptionHelper.encryptText("aes256", data.key, data.iv, message, "base64");
+                const result = await send({
+                  sender: username,
+                  message: encText
+                })
             })
-
+          } else {
+            const result = await send({
+              sender: username,
+              message: message
+            })
+          }
         }
+        function decryptText(text, pubKey){
+           var decText = encryptionHelper.decryptText(algorithm, data.key, data.iv, encText, "base64");
+        }
+
         let lastMessagesLength = 0
         //instead of setInterval one could use sockets to update the state
         async function updateState() {

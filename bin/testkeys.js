@@ -1,5 +1,7 @@
 const secp256k1 = require('secp256k1')
-const { randomBytes } = require('crypto')
+const {
+  randomBytes
+} = require('crypto')
 const createHash = require('sha.js')
 const crypto = require("crypto")
 
@@ -8,7 +10,7 @@ let generatePrivateKey = () => {
   let privKey
   do {
     privKey = randomBytes(32)
-  } while(!secp256k1.privateKeyVerify(privKey))
+  } while (!secp256k1.privateKeyVerify(privKey))
 
   return privKey.toString('hex')
 }
@@ -20,50 +22,50 @@ let generatePublicKey = (privKey) => {
 }
 
 
-let encryptionHelper = ( () => {
-    function getKeyAndIV(key, callback) {
-        crypto.pseudoRandomBytes(16, function (err, ivBuffer) {
-            var keyBuffer  = (key instanceof Buffer) ? key : new Buffer(key) ;
-            callback({
-                iv: ivBuffer,
-                key: keyBuffer
-            });
-        });
-    }
-    let encryptText = (cipher_alg, key, iv, text, encoding) => {
-        var cipher = crypto.createCipheriv(cipher_alg, key, iv);
-        encoding = encoding || "binary";
-        var result = cipher.update(text, "utf8", encoding);
-        result += cipher.final(encoding);
-        return result;
-    }
-    let decryptText = (cipher_alg, key, iv, text, encoding) => {
-        var decipher = crypto.createDecipheriv(cipher_alg, key, iv);
-        encoding = encoding || "binary";
-        var result = decipher.update(text, encoding);
-        result += decipher.final();
-        return result;
-    }
-    return {
-        getKeyAndIV: getKeyAndIV,
-        encryptText: encryptText,
-        decryptText: decryptText
-    };
+let encryptionHelper = (() => {
+  function getKeyAndIV(key, callback) {
+    crypto.pseudoRandomBytes(16, function(err, ivBuffer) {
+      var keyBuffer = (key instanceof Buffer) ? key : new Buffer(key);
+      callback({
+        iv: ivBuffer,
+        key: keyBuffer
+      });
+    });
+  }
+  let encryptText = (cipher_alg, key, iv, text, encoding) => {
+    var cipher = crypto.createCipheriv(cipher_alg, key, iv);
+    encoding = encoding || "binary";
+    var result = cipher.update(text, "utf8", encoding);
+    result += cipher.final(encoding);
+    return result;
+  }
+  let decryptText = (cipher_alg, key, iv, text, encoding) => {
+    var decipher = crypto.createDecipheriv(cipher_alg, key, iv);
+    encoding = encoding || "binary";
+    var result = decipher.update(text, encoding);
+    result += decipher.final();
+    return result;
+  }
+  return {
+    getKeyAndIV: getKeyAndIV,
+    encryptText: encryptText,
+    decryptText: decryptText
+  };
 })()
 
 let privKey = generatePrivateKey()
 let pubKey = generatePublicKey(privKey)
-let passsword = pubKey.slice(0,32)
+let passsword = pubKey.slice(0, 32)
 
 var story = "this is the story of the brave prince who went off to fight the horrible dragon... he set out on his quest one sunny day";
 var algorithm = "aes256"
 
-encryptionHelper.getKeyAndIV(passsword, function (data) { //using 32 byte key
-    var encText = encryptionHelper.encryptText(algorithm, data.key, data.iv, story, "base64");
-    console.log("encrypted text = " + encText);
-    var decText = encryptionHelper.decryptText(algorithm, data.key, data.iv, encText, "base64");
-    console.log("decrypted text = " + decText);
-    console.log('data.key = '+ data.key +' data.iv = '+ data.iv);
+encryptionHelper.getKeyAndIV(passsword, function(data) { //using 32 byte key
+  var encText = encryptionHelper.encryptText(algorithm, data.key, data.iv, story, "base64");
+  console.log("encrypted text = " + encText);
+  var decText = encryptionHelper.decryptText(algorithm, data.key, data.iv, encText, "base64");
+  console.log("decrypted text = " + decText);
+  console.log('data.key = ' + data.key + ' data.iv = ' + data.iv);
 
 });
 

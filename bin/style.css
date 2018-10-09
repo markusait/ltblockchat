@@ -2,11 +2,13 @@
   position: absolute;
   /* top: 50%; */
   left: 50%;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
 }
+
 h1 {
   text-align: center;
 }
+
 /* Reset Select */
 select {
   -webkit-appearance: none;
@@ -16,23 +18,27 @@ select {
   outline: 0;
   box-shadow: none;
   border: 0 !important;
-  background: #575ed8;;
+  background: #575ed8;
+  ;
   background-image: none;
   text-align: center;
   font-size: 18px;
 }
+
 /* Custom Select */
 .select {
   position: relative;
   display: block;
   height: 3em;
   line-height: 3;
-  background: #575ed8;;
+  background: #575ed8;
+  ;
   overflow: hidden;
   border-radius: .25em;
   text-align: center;
   font-size: 18px;
 }
+
 select {
   width: 100%;
   height: 100%;
@@ -43,9 +49,11 @@ select {
   text-align: center;
   font-size: 18px;
 }
+
 select::-ms-expand {
   display: none;
 }
+
 /* Arrow */
 .select::after {
   content: '\25BC';
@@ -57,86 +65,87 @@ select::-ms-expand {
   background: #575ed8;
   pointer-events: none;
 }
+
 /* Transition */
 .select:hover::after {
   color: white;
 }
+
 .select::after {
   -webkit-transition: .25s all ease;
   -o-transition: .25s all ease;
   transition: .25s all ease;
 }
 
-
-body{
-    font-family: 'Nunito';
+body {
+  font-family: 'Nunito';
 }
 
-h2{
-    font-size: 18px;
-    padding: 10px 20px;
-    color: #575ed8;
-    text-align: center;
+h2 {
+  font-size: 18px;
+  padding: 10px 20px;
+  color: #575ed8;
+  text-align: center;
 }
 
-.block{
-    max-width: 800px;
-    margin: 30px auto;
-    border: 1px solid #ddd;
-    box-shadow: 1px 3px 5px rgba(0,0,0,0.05);
-    border-radius: 2px;
+.block {
+  max-width: 800px;
+  margin: 30px auto;
+  border: 1px solid #ddd;
+  box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.05);
+  border-radius: 2px;
 }
 
-#chat-window{
-    height: 400px;
-    overflow: auto;
-    background: #f9f9f9;
+#chat-window {
+  height: 400px;
+  overflow: auto;
+  background: #f9f9f9;
 }
 
-#output p{
-    padding: 14px 0px;
-    margin: 0 20px;
-    border-bottom: 1px solid #e9e9e9;
-    color: #555;
+#output p {
+  padding: 14px 0px;
+  margin: 0 20px;
+  border-bottom: 1px solid #e9e9e9;
+  color: #555;
 }
 
-#feedback p{
-    color: #aaa;
-    padding: 14px 0px;
-    margin: 0 20px;
+#feedback p {
+  color: #aaa;
+  padding: 14px 0px;
+  margin: 0 20px;
 }
 
-.sender strong{
-    background-color: var(--main-bg-color);
+.sender strong {
+  background-color: var(--main-bg-color);
 }
 
-label{
-    box-sizing: border-box;
-    display: block;
-    padding: 10px 20px;
+label {
+  box-sizing: border-box;
+  display: block;
+  padding: 10px 20px;
 }
 
-input{
-    padding: 10px 20px;
-    box-sizing: border-box;
-    background: #eee;
-    border: 0;
-    display: block;
-    width: 100%;
-    background: #fff;
-    border-bottom: 1px solid #eee;
-    font-family: Nunito;
-    font-size: 16px;
+input {
+  padding: 10px 20px;
+  box-sizing: border-box;
+  background: #eee;
+  border: 0;
+  display: block;
+  width: 100%;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  font-family: Nunito;
+  font-size: 16px;
 }
 
-button{
-    background: #575ed8;
-    color: #fff;
-    font-size: 18px;
-    border: 0;
-    padding: 12px 0;
-    width: 100%;
-    border-radius: 0 0 2px 2px;
+button {
+  background: #575ed8;
+  color: #fff;
+  font-size: 18px;
+  border: 0;
+  padding: 12px 0;
+  width: 100%;
+  border-radius: 0 0 2px 2px;
 }
 
 .switch {
@@ -146,7 +155,9 @@ button{
   height: 34px;
 }
 
-.switch input {display:none;}
+.switch input {
+  display: none;
+}
 
 .slider {
   position: absolute;
@@ -172,22 +183,24 @@ button{
   transition: .4s;
 }
 
-input:checked + .slider {
+input:checked+.slider {
   background-color: #575ed8;
 }
 
-input:focus + .slider {
+input:focus+.slider {
   box-shadow: 0 0 1px #575ed8;
 }
 
-input:checked + .slider:before {
+input:checked+.slider:before {
   -webkit-transform: translateX(26px);
   -ms-transform: translateX(26px);
   transform: translateX(26px);
 }
+
 #signing {
   text-align: center
 }
+
 #cryptoKeys {
   text-align: center
 }

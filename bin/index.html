@@ -8,23 +8,11 @@
         <link href="./style.css" rel="stylesheet" />
     </head>
     <body>
-      <!-- <div class="block" id="signing" >
-      <h2>Enable Transaction Hashing</h2>
-          <label class="switch">
-            <input type="checkbox" name="checkbox" checked>
-            <span class="slider round"></span>
-          </label>
-      <h2>Enable Transaction Hashing</h2>
-          <label class="switch">
-          <input type="checkbox" name="checkbox" checked>
-          <span class="slider round"></span>
-        </label>
-    </div> -->
     <div class="block" id="signing">
         <h2>Select Transaction Type</h2>
-        <div class="select">
+        <div class="select" id="optionSelection">
           <select name="slct" id="slct">
-            <option>Choose an option</option>
+            <option value="chooseOption" id="chooseOption">Choose an option</option>
             <option value="normalMessage" id="normalMessage">Normal message</option>
             <option value="hashMessage" id="hashMessage">Hash Message</option>
             <option value="signMessage" id="signMessage">Sign Message</option>
@@ -33,10 +21,10 @@
       </div>
         <div class="block" id="cryptoKeys" >
           <h2>Private Key</h2>
-          <p id ="privKey"> </p>
+          <p id ="privKeyOutput"> </p>
           <br />
           <h2>Public Key</h2>
-          <p id= "pubKey">  </p>
+          <p id= "pubKeyOutput">  </p>
           <button id="genKeys"> generate Keys </button>
         </div>
         <div class="block">
@@ -49,5 +37,8 @@
             <input id="message" type="text" placeholder="Message" />
             <button id="send">Send</button>
         </div>
+        <div class="block" id="decryptText" >
+          <input id="textDcrypt" type="text" placeholder="Decrypt Message"  />
+          <button id="decrypt">Decrypt</button>
     </body>
 </html>

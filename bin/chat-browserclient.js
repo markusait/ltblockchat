@@ -59,14 +59,19 @@ async function main() {
             genesis: genesis,
             nodes: ['ws://localhost:46657']
         })
-        let message = document.getElementById('message'),
+        let chatWindow = document.getElementById('chat-window'),
+            message = document.getElementById('message'),
             username = document.getElementById('username'),
             btn = document.getElementById('send'),
             output = document.getElementById('output'),
             feedback = document.getElementById('feedback'),
-            privKey = document.getElementById('privKey'),
-            pubKey = document.getElementById('pubKey'),
-            genKeys = document.getElementById('genKeys')
+            privKeyOutput = document.getElementById('privKeyOutput'),
+            pubKeyOutput = document.getElementById('pubKeyOutput'),
+            genKeys = document.getElementById('genKeys'),
+            option = document.getElementById('optionSelection')
+
+
+        //make window scroll down with each text
         //crypto part
         //managing keys and Tx signing
 
@@ -88,8 +93,7 @@ async function main() {
         }
 
         let hashTx = (tx) => {
-          let jtx = JSON.stringify(tx)
-          return createHash('sha256').update(jtx).digest()
+          return createHash('sha256').update(JSON.stringify(tx)).digest()
         }
 
         let signTx = (privKey, tx) => {
@@ -139,10 +143,10 @@ async function main() {
         })()
 
         genKeys.addEventListener('click', () => {
-          let privKeyOutput = generatePrivateKey()
-          let pubKeyOutput =  generatePublicKey(privKeyOutput)
-          privKey.innerHTML = privKeyOutput
-          pubKey.innerHTML = pubKeyOutput
+          let privKey = generatePrivateKey()
+          let pubKey =  generatePublicKey(privKey)
+          privKeyOutput.innerHTML = privKey
+          pubKeyOutput.innerHTML = pubKey
         })
 
         // when user hits enter message is sent
@@ -168,29 +172,39 @@ async function main() {
             }
         })
         async function sendMessage(username, message, messageType) {
-          switch (messageType){
+          let privKey = generatePrivateKey()
+          let pubKey =  generatePublicKey(privKey)
+          console.log(privKey, pubKey);
+          switch (messageType) {
+            case 'chooseOption':
+              option.style.color = 'red'
+              alert('choose an Option')
+              break
             case 'normalMessage':
+              console.log('sent normal message');
               let result = await send({
                 sender: username,
-                message: encText
+                message: message
               })
+              //make window scroll down with each text
             break
             case 'hashMessage':
+            console.log('sent tx hash');
               let { txHash } = signTx(privKey, { sender: pubKey, message: message })
-                result = await send({
+              console.log(txHash);
+                await send({
                 sender: username,
                 message: txHash
               })
               break
             case 'signMessage':
-            let privKeyOutput = generatePrivateKey()
-            let pubKeyOutput =  generatePublicKey(privKeyOutput)
-            privKey.innerHTML = privKeyOutput
-            pubKey.innerHTML = pubKeyOutput
+            console.log('sent signed message');
+            privKeyOutput.innerHTML = privKey
+            pubKeyOutput.innerHTML = pubKey
             let passsword = pubKey.slice(0,32)
             encryptionHelper.getKeyAndIV(passsword, async function (data) {
                 let encText = encryptionHelper.encryptText("aes256", data.key, data.iv, message, "base64");
-                const result = await send({
+                await send({
                   sender: username,
                   message: encText
                 })
@@ -206,11 +220,9 @@ async function main() {
         //instead of setInterval one could use sockets to update the state
         async function updateState() {
             // let messages = await axios.get('http://localhost:' + 3000 + '/state').then(res => res.data)
-            let {
-                data
-            } = await axios.get('http://localhost:' + 3000 + '/state')
+            let { data } = await axios.get('http://localhost:' + 3000 + '/state')
             let messages = await data.messages
-            if (messages !== undefined && messages.length >= lastMessagesLength) {
+            if (messages !== undefined && messages.length > lastMessagesLength) {
                 for (let i = lastMessagesLength; i < messages.length; i++) {
                     // console.log(messages[i], i)
                     let {
@@ -220,6 +232,8 @@ async function main() {
                     feedback.innerHTML = ''
                     output.innerHTML += `<p class=sender> <strong> ${sender} : </strong> ${message}</p>`
                 }
+                //adjusting window
+                chatWindow.scrollTop = chatWindow.scrollHeight
                 lastMessagesLength = messages.length
             }
         }

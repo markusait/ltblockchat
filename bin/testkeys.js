@@ -63,6 +63,7 @@ encryptionHelper.getKeyAndIV(passsword, function (data) { //using 32 byte key
     console.log("encrypted text = " + encText);
     var decText = encryptionHelper.decryptText(algorithm, data.key, data.iv, encText, "base64");
     console.log("decrypted text = " + decText);
+    console.log('data.key = '+ data.key +' data.iv = '+ data.iv);
 
 });
 

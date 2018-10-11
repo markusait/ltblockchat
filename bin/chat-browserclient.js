@@ -4,9 +4,12 @@ const port = 3000;
 const {
   generatePrivateKey,
   generatePublicKey,
+  genPassword,
   toBuffer,
   hashTx,
-  signTx
+  signTx,
+  encrypt,
+  decrypt,
 } = require('./cryptoKeys.js')
 
 //TODO
@@ -20,37 +23,9 @@ const {
 // make text for which node to trust
 // find a nice blockexplorer?
 // include this error handling https://stackoverflow.com/questions/951791/javascript-global-error-handling/10556743#10556743
+//make pw outpf priv key
 
-let encryptionHelper = (() => {
-  getKeyAndIV = (key, callback) => {
-    crypto.pseudoRandomBytes(16, (err, ivBuffer) => {
-      var keyBuffer = (key instanceof Buffer) ? key : new Buffer(key);
-      callback({
-        iv: ivBuffer,
-        key: keyBuffer
-      });
-    });
-  }
-  let encryptText = (cipher_alg, key, iv, text, encoding) => {
-    var cipher = crypto.createCipheriv(cipher_alg, key, iv);
-    encoding = encoding || "binary";
-    var result = cipher.update(text, "utf8", encoding);
-    result += cipher.final(encoding);
-    return result;
-  }
-  let decryptText = (cipher_alg, key, iv, text, encoding) => {
-    var decipher = crypto.createDecipheriv(cipher_alg, key, iv);
-    encoding = encoding || "binary";
-    var result = decipher.update(text, encoding);
-    result += decipher.final();
-    return result;
-  }
-  return {
-    getKeyAndIV: getKeyAndIV,
-    encryptText: encryptText,
-    decryptText: decryptText
-  };
-})()
+
 
 
 
@@ -84,7 +59,7 @@ async function main() {
      * and to grab the send function. Note the keyword async in the function above and the keyword
      * await here below.
      */
-     // let { send, state } = await connect(null, { genesis, nodes}); not working
+    // let { send, state } = await connect(null, { genesis, nodes}); not working
     let {
       send
     } = await connect(null, {
@@ -99,15 +74,28 @@ async function main() {
       feedback = document.getElementById('feedback'),
       privKeyOutput = document.getElementById('privKeyOutput'),
       pubKeyOutput = document.getElementById('pubKeyOutput'),
+      passwordOutput = document.getElementById('passwordOutput'),
       genKeys = document.getElementById('genKeys'),
-      option = document.getElementById('optionSelection')
+      option = document.getElementById('optionSelection'),
+      inputDecryptText = document.getElementById('inputDecryptText'),
+      decryptPassword = document.getElementById('decryptPassword'),
+      decryptTextOutput = document.getElementById('decryptTextOutput'),
+      decryptTextButton = document.getElementById('decryptText')
 
-    //Event listeners
+    decryptTextButton.addEventListener('click', () => {
+      let password = decryptPassword.value
+      let message = inputDecryptText.value
+      let res = decrypt(message, password)
+      decryptTextOutput.innerHTML = res
+    })
     genKeys.addEventListener('click', () => {
       let privKey = generatePrivateKey()
       let pubKey = generatePublicKey(privKey)
+      let password = genPassword(pubKey)
+
       privKeyOutput.innerHTML = privKey
       pubKeyOutput.innerHTML = pubKey
+      passwordOutput.innerHTML = password
     })
 
     // when user hits enter message is sent
@@ -132,56 +120,50 @@ async function main() {
         message.value = ""
       }
     })
+
     async function sendMessage(username, message, messageType) {
-      let privKey = generatePrivateKey()
-      let pubKey = generatePublicKey(privKey)
-      privKeyOutput.innerHTML = privKey
-      pubKeyOutput.innerHTML = pubKey
+      if (privKeyOutput.textContent === ' ') {
+        alert('generate Keys first')
+        return
+      }
+      let privKey = privKeyOutput.textContent
+      let pubKey = pubKeyOutput.textContent
+      let password = genPassword(pubKey)
+      console.log(privKey, pubKey, password);
       switch (messageType) {
         case 'chooseOption':
           option.style.color = 'red'
           alert('choose an Option')
           break
         case 'normalMessage':
-          console.log('sent normal message');
-          let result = await send({
+          await send({
             sender: username,
             message: message
           })
           break
         case 'hashMessage':
-          console.log('sent tx hash');
           let {
             txHash
           } = signTx(privKey, {
             sender: pubKey,
             message: message
           })
-          console.log(txHash);
           await send({
             sender: username,
             message: txHash
           })
           break
-        case 'signMessage':
-          console.log('sent signed message');
-          privKeyOutput.innerHTML = privKey
-          pubKeyOutput.innerHTML = pubKey
-          let passsword = pubKey.slice(0, 32)
-          encryptionHelper.getKeyAndIV(passsword, async function(data) {
-            let encText = encryptionHelper.encryptText("aes256", data.key, data.iv, message, "base64");
-            await send({
-              sender: username,
-              message: encText
-            })
+        case 'encryptMessage':
+          let encText = encrypt(message, password)
+          await send({
+            sender: username,
+            message: encText
           })
           break
       }
     }
 
-    function decryptText(text, pubKey) {
-      var decText = encryptionHelper.decryptText(algorithm, data.key, data.iv, encText, "base64");
-    }
+
 
     let lastMessagesLength = 0
     //instead of setInterval one could use sockets to update the state

@@ -24796,23 +24796,22 @@ exports.createContext = Script.createContext = function (context) {
 };
 
 },{}],165:[function(require,module,exports){
-(function (process,Buffer){
+(function (process){
 const axios = require('axios');
 const connect = require('lotion-connect')
-const secp256k1 = require('secp256k1')
-const {
-  randomBytes
-} = require('crypto')
-const createHash = require('sha.js')
-const crypto = require('crypto')
 const port = 3000;
 const {
   generatePrivateKey,
   generatePublicKey,
+  genPassword,
   toBuffer,
   hashTx,
-  signTx
+  signTx,
+  encrypt,
+  decrypt,
+  encryptionHelper
 } = require('./cryptoKeys.js')
+
 //TODO
 // outsource crypto
 // 1. add to server and make cors possible
@@ -24824,37 +24823,28 @@ const {
 // make text for which node to trust
 // find a nice blockexplorer?
 // include this error handling https://stackoverflow.com/questions/951791/javascript-global-error-handling/10556743#10556743
+//make pw outpf priv key
 
-let encryptionHelper = (() => {
-  getKeyAndIV = (key, callback) => {
-    crypto.pseudoRandomBytes(16, (err, ivBuffer) => {
-      var keyBuffer = (key instanceof Buffer) ? key : new Buffer(key);
-      callback({
-        iv: ivBuffer,
-        key: keyBuffer
-      });
-    });
-  }
-  let encryptText = (cipher_alg, key, iv, text, encoding) => {
-    var cipher = crypto.createCipheriv(cipher_alg, key, iv);
-    encoding = encoding || "binary";
-    var result = cipher.update(text, "utf8", encoding);
-    result += cipher.final(encoding);
-    return result;
-  }
-  let decryptText = (cipher_alg, key, iv, text, encoding) => {
-    var decipher = crypto.createDecipheriv(cipher_alg, key, iv);
-    encoding = encoding || "binary";
-    var result = decipher.update(text, encoding);
-    result += decipher.final();
-    return result;
-  }
-  return {
-    getKeyAndIV: getKeyAndIV,
-    encryptText: encryptText,
-    decryptText: decryptText
-  };
-})()
+var story = "this is the story of the brave prince who went off to fight the horrible dragon... he set out on his quest one sunny day";
+var algorithm = "aes256" 
+
+console.log("testing encryption and decryption");
+console.log("text is: " + story);
+
+encryptionHelper.getKeyAndIV("1234567890abcdefghijklmnopqrstuv", function (data) { //using 32 byte key
+
+    console.log("got key and iv buffers");
+
+    var encText = encryptionHelper.encryptText(algorithm, data.key, data.iv, story, "base64");
+
+    console.log("encrypted text = " + encText);
+
+    var decText = encryptionHelper.decryptText(algorithm, data.key, data.iv, encText, "base64");
+
+    console.log("decrypted text = " + decText);
+
+    assert.equal(decText, story);
+});
 
 
 
@@ -24883,14 +24873,12 @@ async function main() {
         }
       }]
     }
-
-    // let { send, state } = await connect(null, { genesis, nodes}); not working
     /**
      * Use Javascript object literal syntax to grab the current state of the data in the blockchain
      * and to grab the send function. Note the keyword async in the function above and the keyword
-     * await here below. This is an async function.
+     * await here below.
      */
-
+    // let { send, state } = await connect(null, { genesis, nodes}); not working
     let {
       send
     } = await connect(null, {
@@ -24905,17 +24893,28 @@ async function main() {
       feedback = document.getElementById('feedback'),
       privKeyOutput = document.getElementById('privKeyOutput'),
       pubKeyOutput = document.getElementById('pubKeyOutput'),
+      passwordOutput = document.getElementById('passwordOutput'),
       genKeys = document.getElementById('genKeys'),
-      option = document.getElementById('optionSelection')
+      option = document.getElementById('optionSelection'),
+      inputDecryptText = document.getElementById('inputDecryptText'),
+      decryptPassword = document.getElementById('decryptPassword'),
+      decryptTextOutput = document.getElementById('decryptTextOutput'),
+      decryptTextButton = document.getElementById('decryptText')
 
-
-
-
+    decryptTextButton.addEventListener('click', () => {
+      let password = decryptPassword.value
+      let message = inputDecryptText.value
+      let res = decrypt(message, password)
+      decryptTextOutput.innerHTML = res
+    })
     genKeys.addEventListener('click', () => {
       let privKey = generatePrivateKey()
       let pubKey = generatePublicKey(privKey)
+      let password = genPassword(pubKey)
+
       privKeyOutput.innerHTML = privKey
       pubKeyOutput.innerHTML = pubKey
+      passwordOutput.innerHTML = password
     })
 
     // when user hits enter message is sent
@@ -24940,56 +24939,50 @@ async function main() {
         message.value = ""
       }
     })
+
     async function sendMessage(username, message, messageType) {
-      let privKey = generatePrivateKey()
-      let pubKey = generatePublicKey(privKey)
-      privKeyOutput.innerHTML = privKey
-      pubKeyOutput.innerHTML = pubKey
+      if (privKeyOutput.textContent === ' ') {
+        alert('generate Keys first')
+        return
+      }
+      let privKey = privKeyOutput.textContent
+      let pubKey = pubKeyOutput.textContent
+      let password = genPassword(pubKey)
+      console.log(privKey, pubKey, password);
       switch (messageType) {
         case 'chooseOption':
           option.style.color = 'red'
           alert('choose an Option')
           break
         case 'normalMessage':
-          console.log('sent normal message');
-          let result = await send({
+          await send({
             sender: username,
             message: message
           })
           break
         case 'hashMessage':
-          console.log('sent tx hash');
           let {
             txHash
           } = signTx(privKey, {
             sender: pubKey,
             message: message
           })
-          console.log(txHash);
           await send({
             sender: username,
             message: txHash
           })
           break
-        case 'signMessage':
-          console.log('sent signed message');
-          privKeyOutput.innerHTML = privKey
-          pubKeyOutput.innerHTML = pubKey
-          let passsword = pubKey.slice(0, 32)
-          encryptionHelper.getKeyAndIV(passsword, async function(data) {
-            let encText = encryptionHelper.encryptText("aes256", data.key, data.iv, message, "base64");
-            await send({
-              sender: username,
-              message: encText
-            })
+        case 'encryptMessage':
+          let encText = encrypt(message, password)
+          await send({
+            sender: username,
+            message: encText
           })
           break
       }
     }
 
-    function decryptText(text, pubKey) {
-      var decText = encryptionHelper.decryptText(algorithm, data.key, data.iv, encText, "base64");
-    }
+
 
     let lastMessagesLength = 0
     //instead of setInterval one could use sockets to update the state
@@ -25030,8 +25023,8 @@ process.on('unhandledRejection', function(reason, p) {
 
 main();
 
-}).call(this,require('_process'),require("buffer").Buffer)
-},{"./cryptoKeys.js":166,"_process":120,"axios":167,"buffer":48,"crypto":56,"lotion-connect":255,"secp256k1":299,"sha.js":306}],166:[function(require,module,exports){
+}).call(this,require('_process'))
+},{"./cryptoKeys.js":166,"_process":120,"axios":167,"lotion-connect":255}],166:[function(require,module,exports){
 (function (Buffer){
 //crypto part
 //managing keys and Tx signing
@@ -25080,7 +25073,24 @@ let signTx = (privKey, tx) => {
   console.log(txHash.toString('hex'));
   return signedTx
 }
+let genPassword = (pubKey) => {
+  let password = pubKey.slice(0, 32)
+  return password
+}
 
+let encrypt = (text,password) => {
+  var cipher = crypto.createCipher('aes-256-cbc',password)
+  var crypted = cipher.update(text,'utf8','hex')
+  crypted += cipher.final('hex');
+  return crypted;
+}
+
+let decrypt = (text,password) => {
+  var decipher = crypto.createDecipher('aes-256-cbc',password)
+  var dec = decipher.update(text,'hex','utf8')
+  dec += decipher.final('utf8');
+  return dec;
+}
 let encryptionHelper = (() => {
   getKeyAndIV = (key, callback) => {
     crypto.pseudoRandomBytes(16, (err, ivBuffer) => {
@@ -25112,12 +25122,17 @@ let encryptionHelper = (() => {
   };
 })()
 
+
 module.exports = {
   generatePrivateKey,
   generatePublicKey,
   toBuffer,
   hashTx,
   signTx,
+  genPassword,
+  encrypt,
+  decrypt,
+  encryptionHelper
 }
 
 }).call(this,require("buffer").Buffer)

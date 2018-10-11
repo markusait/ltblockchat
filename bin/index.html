@@ -17,7 +17,7 @@
         <option value="chooseOption" id="chooseOption">Choose an option</option>
         <option value="normalMessage" id="normalMessage">Normal message</option>
         <option value="hashMessage" id="hashMessage">Hash Message</option>
-        <option value="signMessage" id="signMessage">Sign Message</option>
+        <option value="encryptMessage" id="encryptMessage">Encrypt Message</option>
       </select>
     </div>
   </div>
@@ -27,6 +27,8 @@
     <br />
     <h2>Public Key</h2>
     <p id="pubKeyOutput"> </p>
+    <h2>Password</h2>
+    <p id="passwordOutput"> </p>
     <button id="genKeys"> generate Keys </button>
   </div>
   <div class="block">
@@ -40,8 +42,10 @@
     <button id="send">Send</button>
   </div>
   <div class="block" id="decryptText">
-    <input id="textDcrypt" type="text" placeholder="Decrypt Message" />
-    <button id="decrypt">Decrypt</button>
+    <input id="inputDecryptText" type="text" placeholder="Message" />
+    <input id="decryptPassword" type="text" placeholder="Password" />
+    <p id="decryptTextOutput"></p>
+    <button id="decryptText">Decrypt Message</button>
 </body>
 
 </html>

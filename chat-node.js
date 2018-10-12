@@ -1,5 +1,5 @@
 let lotion = require('lotion');
-let lotionPort = 3000;
+let lotionPort = 3009 ;
 let config = require('./config.js')
 let dev = process.env.DEV || false;
 console.log( config.peers);

@@ -37,7 +37,7 @@ async function main() {
      * tendermint port 46657 to the end. ws means connect via websockets
      * this step is required in order for connect to work
      */
-    let nodes = 'ws://localhost:46657'
+    let nodes = ['ws://138.201.93.202:46657']
 
     //all clients share the same genesis file
     // TODO: acutally load the file
@@ -64,7 +64,7 @@ async function main() {
       send
     } = await connect(null, {
       genesis: genesis,
-      nodes: ['ws://localhost:46657']
+      nodes: nodes
     })
     let chatWindow = document.getElementById('chat-window'),
       message = document.getElementById('message'),
@@ -170,7 +170,7 @@ async function main() {
       // let messages = await axios.get('http://localhost:' + 3000 + '/state').then(res => res.data)
       let {
         data
-      } = await axios.get('http://localhost:' + 3000 + '/state')
+      } = await axios.get('http://138.201.93.202:' + 3009 + '/state')
       let messages = await data.messages
       if (messages !== undefined && messages.length > lastMessagesLength) {
         for (let i = lastMessagesLength; i < messages.length; i++) {

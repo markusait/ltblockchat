@@ -24969,7 +24969,7 @@ async function main() {
       // let messages = await axios.get('http://localhost:' + 3000 + '/state').then(res => res.data)
       let {
         data
-      } = await axios.get('https://2f38b6d7.ngrok.io:' + '/state')   //normally put + port inbetween
+      } = await axios.get('https://daf2e924.ngrok.io/:' + '/state')   //normally put + port inbetween
       let messages = await data.messages
       if (messages !== undefined && messages.length > lastMessagesLength) {
         for (let i = lastMessagesLength; i < messages.length; i++) {

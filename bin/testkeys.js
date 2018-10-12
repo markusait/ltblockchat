@@ -90,30 +90,40 @@ function callbackf(data) { //using 32 byte key
 }
 
 function output(data){
-  console.log(data);
+  // console.log(data);
   return data
 }
-console.log(output());
+// console.log(output());
 
 
 
 function encrypt(text) {
-  var cipher = crypto.createCipher('aes-256-cbc', passsword)
-  var crypted = cipher.update(text, 'utf8', 'hex')
-  crypted += cipher.final('hex');
-  return crypted;
+  try {
+    var cipher = crypto.createCipher('aes-256-cbc', passsword)
+    var crypted = cipher.update(text, 'utf8', 'hex')
+    crypted += cipher.final('hex');
+    return crypted;
+  } catch (error) {
+    return error
+  }
 }
 
 function decrypt(text) {
-  var decipher = crypto.createDecipher('aes-256-cbc', passsword)
-  var dec = decipher.update(text, 'hex', 'utf8')
-  dec += decipher.final('utf8');
-  return dec;
+  try {
+    var decipher = crypto.createDecipher('aes-256-cbc', passsword)
+    var dec = decipher.update(text, 'hex', 'utf8')
+    dec += decipher.final('utf8');
+    return dec;
+  } catch (error){
+    return error
+  }
 }
 
 
-
-
+let enc = encrypt('hi')
+console.log(enc);
+let dec = decrypt('enc')
+console.log(dec);
 
 
 

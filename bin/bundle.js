@@ -24809,7 +24809,6 @@ const {
   signTx,
   encrypt,
   decrypt,
-  encryptionHelper
 } = require('./cryptoKeys.js')
 
 //TODO
@@ -24825,26 +24824,7 @@ const {
 // include this error handling https://stackoverflow.com/questions/951791/javascript-global-error-handling/10556743#10556743
 //make pw outpf priv key
 
-var story = "this is the story of the brave prince who went off to fight the horrible dragon... he set out on his quest one sunny day";
-var algorithm = "aes256" 
 
-console.log("testing encryption and decryption");
-console.log("text is: " + story);
-
-encryptionHelper.getKeyAndIV("1234567890abcdefghijklmnopqrstuv", function (data) { //using 32 byte key
-
-    console.log("got key and iv buffers");
-
-    var encText = encryptionHelper.encryptText(algorithm, data.key, data.iv, story, "base64");
-
-    console.log("encrypted text = " + encText);
-
-    var decText = encryptionHelper.decryptText(algorithm, data.key, data.iv, encText, "base64");
-
-    console.log("decrypted text = " + decText);
-
-    assert.equal(decText, story);
-});
 
 
 
@@ -24974,6 +24954,7 @@ async function main() {
           break
         case 'encryptMessage':
           let encText = encrypt(message, password)
+          console.log(encText);
           await send({
             sender: username,
             message: encText
@@ -24981,8 +24962,6 @@ async function main() {
           break
       }
     }
-
-
 
     let lastMessagesLength = 0
     //instead of setInterval one could use sockets to update the state
@@ -25073,55 +25052,39 @@ let signTx = (privKey, tx) => {
   console.log(txHash.toString('hex'));
   return signedTx
 }
-let genPassword = (pubKey) => {
-  let password = pubKey.slice(0, 32)
+let genPassword = (privKey) => {
+  let hashedPrivKey = createHash('sha256').update(privKey).digest().toString('hex')
+  let password = hashedPrivKey.slice(0, 32)
   return password
 }
 
-let encrypt = (text,password) => {
-  var cipher = crypto.createCipher('aes-256-cbc',password)
-  var crypted = cipher.update(text,'utf8','hex')
-  crypted += cipher.final('hex');
-  return crypted;
+function encrypt(text,password) {
+  try {
+    var cipher = crypto.createCipher('aes-256-cbc', password)
+    var crypted = cipher.update(text, 'utf8', 'hex')
+    crypted += cipher.final('hex');
+    return crypted;
+  } catch (error) {
+    return error
+  }
 }
 
-let decrypt = (text,password) => {
-  var decipher = crypto.createDecipher('aes-256-cbc',password)
-  var dec = decipher.update(text,'hex','utf8')
-  dec += decipher.final('utf8');
-  return dec;
+function decrypt(text,password) {
+  try {
+    var decipher = crypto.createDecipher('aes-256-cbc', password)
+    var dec = decipher.update(text, 'hex', 'utf8')
+    dec += decipher.final('utf8');
+    return dec;
+  } catch (error){
+    return error
+  }
 }
-let encryptionHelper = (() => {
-  getKeyAndIV = (key, callback) => {
-    crypto.pseudoRandomBytes(16, (err, ivBuffer) => {
-      var keyBuffer = (key instanceof Buffer) ? key : new Buffer(key);
-      callback({
-        iv: ivBuffer,
-        key: keyBuffer
-      });
-    });
-  }
-  let encryptText = (cipher_alg, key, iv, text, encoding) => {
-    var cipher = crypto.createCipheriv(cipher_alg, key, iv);
-    encoding = encoding || "binary";
-    var result = cipher.update(text, "utf8", encoding);
-    result += cipher.final(encoding);
-    return result;
-  }
-  let decryptText = (cipher_alg, key, iv, text, encoding) => {
-    var decipher = crypto.createDecipheriv(cipher_alg, key, iv);
-    encoding = encoding || "binary";
-    var result = decipher.update(text, encoding);
-    result += decipher.final();
-    return result;
-  }
-  return {
-    getKeyAndIV: getKeyAndIV,
-    encryptText: encryptText,
-    decryptText: decryptText
-  };
-})()
 
+// let privKey = generatePrivateKey()
+// let hashedPrivKey = createHash('sha256').update(privKey).digest().toString('hex')
+// let password = genPassword(hashedPrivKey).toString('hex')
+//
+// console.log(privKey,hashedPrivKey,password);
 
 module.exports = {
   generatePrivateKey,
@@ -25132,7 +25095,6 @@ module.exports = {
   genPassword,
   encrypt,
   decrypt,
-  encryptionHelper
 }
 
 }).call(this,require("buffer").Buffer)

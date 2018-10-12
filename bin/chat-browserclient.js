@@ -155,6 +155,7 @@ async function main() {
           break
         case 'encryptMessage':
           let encText = encrypt(message, password)
+          console.log(encText);
           await send({
             sender: username,
             message: encText
@@ -162,8 +163,6 @@ async function main() {
           break
       }
     }
-
-
 
     let lastMessagesLength = 0
     //instead of setInterval one could use sockets to update the state

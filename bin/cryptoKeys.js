@@ -45,29 +45,39 @@ let signTx = (privKey, tx) => {
   console.log(txHash.toString('hex'));
   return signedTx
 }
-let genPassword = (data) => {
-  let password = data.slice(0, 32)
+let genPassword = (privKey) => {
+  let hashedPrivKey = createHash('sha256').update(privKey).digest().toString('hex')
+  let password = hashedPrivKey.slice(0, 32)
   return password
 }
 
-let encrypt = (text,password) => {
-  var cipher = crypto.createCipher('aes-256-cbc',password)
-  var crypted = cipher.update(text,'utf8','hex')
-  crypted += cipher.final('hex');
-  return crypted;
+function encrypt(text,password) {
+  try {
+    var cipher = crypto.createCipher('aes-256-cbc', password)
+    var crypted = cipher.update(text, 'utf8', 'hex')
+    crypted += cipher.final('hex');
+    return crypted;
+  } catch (error) {
+    return error
+  }
 }
 
-let decrypt = (text,password) => {
-  var decipher = crypto.createDecipher('aes-256-cbc',password)
-  var dec = decipher.update(text,'hex','utf8')
-  dec += decipher.final('utf8');
-  return dec;
+function decrypt(text,password) {
+  try {
+    var decipher = crypto.createDecipher('aes-256-cbc', password)
+    var dec = decipher.update(text, 'hex', 'utf8')
+    dec += decipher.final('utf8');
+    return dec;
+  } catch (error){
+    return error
+  }
 }
-let privKey = generatePrivateKey()
-let hashedPrivKey = createHash('sha256').update(privKey).digest().toString('hex')
-let password = genPassword(hashedPrivKey).toString('hex')
 
-console.log(privKey,hashedPrivKey,password);
+// let privKey = generatePrivateKey()
+// let hashedPrivKey = createHash('sha256').update(privKey).digest().toString('hex')
+// let password = genPassword(hashedPrivKey).toString('hex')
+//
+// console.log(privKey,hashedPrivKey,password);
 
 module.exports = {
   generatePrivateKey,

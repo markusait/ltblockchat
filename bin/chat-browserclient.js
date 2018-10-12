@@ -170,7 +170,7 @@ async function main() {
       // let messages = await axios.get('http://localhost:' + 3000 + '/state').then(res => res.data)
       let {
         data
-      } = await axios.get('http://138.201.93.202:' + 3009 + '/state')
+      } = await axios.get('http://138.201.93.202:' + 8080 + '/state')
       let messages = await data.messages
       if (messages !== undefined && messages.length > lastMessagesLength) {
         for (let i = lastMessagesLength; i < messages.length; i++) {

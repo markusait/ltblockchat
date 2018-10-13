@@ -24814,7 +24814,8 @@ const {
 //TODO
 // outsource crypto
 // 1. add to server and make cors possible
-// 2. connect different nodes
+// 2. make socket connection that changes only on output 
+// 3. connect different nodes
 // add socket connection?
 // search for chatbot api
 // search for how to push down nodes!

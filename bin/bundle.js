@@ -24836,7 +24836,7 @@ async function main() {
      * tendermint port 46657 to the end. ws means connect via websockets
      * this step is required in order for connect to work
      */
-    let nodes = ['wss://138.201.93.202:46657']
+    let nodes = ['ws://138.201.93.202:46657']
 
     //all clients share the same genesis file
     // TODO: acutally load the file
@@ -24969,7 +24969,7 @@ async function main() {
       // let messages = await axios.get('http://localhost:' + 3000 + '/state').then(res => res.data)
       let {
         data
-      } = await axios.get('https://daf2e924.ngrok.io/:' + '/state')   //normally put + port inbetween
+      } = await axios.get('http://block.digitpay.de' + '/state')   //normally put + port inbetween
       let messages = await data.messages
       if (messages !== undefined && messages.length > lastMessagesLength) {
         for (let i = lastMessagesLength; i < messages.length; i++) {

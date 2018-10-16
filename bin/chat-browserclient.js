@@ -1,6 +1,7 @@
 const axios = require('axios');
 const connect = require('lotion-connect')
 const port = 3000;
+const io = require('socket.io-client');
 const {
   generatePrivateKey,
   generatePublicKey,
@@ -13,35 +14,18 @@ const {
 } = require('./cryptoKeys.js')
 
 //TODO
-// outsource crypto
-// 1. add to server and make cors possible
-// 2. make socket connection that changes only on output 
+// 2. make socket connection that changes only on output
 // 3. connect different nodes
-// add socket connection?
-// search for chatbot api
 // search for how to push down nodes!
-// show block height? and make tendermint mine empty blocks false
+//show tendermint log
 // make text for which node to trust
 // find a nice blockexplorer?
 // include this error handling https://stackoverflow.com/questions/951791/javascript-global-error-handling/10556743#10556743
-//make pw outpf priv key
-
-
-
-
-
 
 async function main() {
   try {
-    /**
-     * Append ws:// to the front of each validator IP address and the
-     * tendermint port 46657 to the end. ws means connect via websockets
-     * this step is required in order for connect to work
-     */
-    let nodes = ['ws://138.201.93.202:46657']
-
+    let nodes = ['ws://localhost:46657']
     //all clients share the same genesis file
-    // TODO: acutally load the file
     let genesis = {
       "app_hash": "b600cc693f96924721e7e55944663e41e6410fe24a1dfbbb9befe8368673a372",
       "chain_id": "test-chain-OgmGOm",
@@ -55,12 +39,7 @@ async function main() {
         }
       }]
     }
-    /**
-     * Use Javascript object literal syntax to grab the current state of the data in the blockchain
-     * and to grab the send function. Note the keyword async in the function above and the keyword
-     * await here below.
-     */
-    // let { send, state } = await connect(null, { genesis, nodes}); not working
+    // let { send, state } = await connect(null, { genesis, nodes}); RC send method not working currently
     let {
       send
     } = await connect(null, {
@@ -98,7 +77,6 @@ async function main() {
       pubKeyOutput.innerHTML = pubKey
       passwordOutput.innerHTML = password
     })
-
     // when user hits enter message is sent
     message.addEventListener('keydown', (e) => {
       // if(message.value ==='kill node 1'){
@@ -130,7 +108,6 @@ async function main() {
       let privKey = privKeyOutput.textContent
       let pubKey = pubKeyOutput.textContent
       let password = genPassword(pubKey)
-      console.log(privKey, pubKey, password);
       switch (messageType) {
         case 'chooseOption':
           option.style.color = 'red'
@@ -164,34 +141,14 @@ async function main() {
           break
       }
     }
-
+    let socket = io.connect('http://localhost:1337');
     let lastMessagesLength = 0
-    //instead of setInterval one could use sockets to update the state
-    async function updateState() {
-      // let messages = await axios.get('http://localhost:' + 3000 + '/state').then(res => res.data)
-      let {
-        data
-      } = await axios.get('http://block.digitpay.de' + '/state')   //normally put + port inbetween
-      let messages = await data.messages
-      if (messages !== undefined && messages.length > lastMessagesLength) {
-        for (let i = lastMessagesLength; i < messages.length; i++) {
-          // console.log(messages[i], i)
-          let {
-            sender,
-            message
-          } = messages[i]
-          feedback.innerHTML = ''
-          output.innerHTML += `<p class=sender> <strong> ${sender} : </strong> ${message}</p>`
-        }
-        //adjusting window
-        chatWindow.scrollTop = chatWindow.scrollHeight
-        lastMessagesLength = messages.length
-      }
-    }
-    setInterval(async () => {
-      updateState()
-    }, 50)
-
+    socket.on('chat', (data) => {
+    data.forEach((message) => {
+      output.innerHTML += '<p class="sender" style="color: black"><strong>' + message.sender + ': </strong>' + message.message + '</p>'
+    })
+    chatWindow.scrollTop = chatWindow.scrollHeight
+    });
   } catch (err) {
     console.log('error occured' + err);
   }

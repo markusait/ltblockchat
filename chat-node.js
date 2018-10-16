@@ -1,120 +1,108 @@
-let lotion = require('lotion');
-let lotionPort = 8080 ;
-let config = require('./config.js')
-let dev = process.env.DEV || false;
-console.log( config.peers);
+const lotion = require('lotion');
+const lotionPort = 8080;
+const config = require('./config.js');
+const socket = require('socket.io');
+const express = require('express');
+const axios = require('axios');
+
 async function main() {
-    /**
-     * Lotion always runs on localhost - you will never access lotion
-     * from outside IP addresses or domains - you would have an API at the public
-     * address and then have that point to localhost to talk to the lotion app
-     */
-    console.log('starting a blockchain interface on port ' + lotionPort + '...\n');
-    console.log(
-        `
+  console.log('starting a blockchain interface on port ' + lotionPort + '...\n');
+  console.log(
+    `
         chain state : http://localhost:${lotionPort}/state
         transactions: http://localhost:${lotionPort}/txs
         `
-    )
-    let opts = {
-        /**
-         * Explicitly set ports so they are consistent across nodes
-         * The ports you use, in this case Ports 46656 & 46657 must be
-         * publicly exposed on your cloud server - no reverse proxy needed (ie Apache/nginx)
-         */
-        // genesis: './genesis.json',
-        // keys: './priv_validator.json',
-        p2pPort: 46656,
-        tendermintPort: 46657,
-        logTendermint: true,
-        createEmptyBlocks: false,
-        /**
-         * If you ever change initial state, your app will have a new GCI - be very careful about changing
-         * your initialState when you have existing validators - because it could break your app
-         */
-        initialState: {
-            messages: [
-                { sender: 'Markus', message: 'welcome' },
-                { sender: 'Markus', message: 'on the blockchain' },
-                { sender: 'Markus', message: 'endless uses' }
-            ]
+  )
+  let opts = {
+    //peers = config.peers.map((addr) => `${addr}:46656`);
+    genesis: './genesis.json',
+    keys: './priv_validator.json',
+    p2pPort: 46656,
+    tendermintPort: 46657,
+    logTendermint: true,
+    createEmptyBlocks: false,
+
+    initialState: {
+      messages: [{
+          sender: 'Markus',
+          message: 'welcome to tendermint '
+        },
+        {
+          sender: 'Markus',
+          message: 'on the blockchain'
         }
-    };
-    if (false) {
-        // devMode on lotion creates a new app/GCI each run, then deletes all artifacts when killed
-        // use devMode to test functionality of your code without worrying about validators
-        // opts.devMode = true;
-    } else {
-        opts.genesis = './genesis.json'
-        opts.keys = './priv_validator.json'
-        // opts.peers = config.peers.map((addr) => `${addr}:46656`);
-
+      ]
     }
-    /**
-     * Create a new instance of Lotion
-     */
-    let app = lotion(opts);
-
-    /**
-     * Lotion uses middleware functions like msgHandler to intercept and process
-     * incoming transactions.
-     * Middleware/handlers MUST be DETERMINISTIC
-     * see http://www.ocoudert.com/blog/2011/05/30/how-to-make-software-deterministic/
-     *
-     * Write LOTS of error handling - cover every situation which you can think of
-     * Once a transaction is processed, it lives on the blockchain FOREVER
-     *
-     * msgHandler makes sure the incoming transaction message and sender (username) is of
-     * type string and that the message is around 50 characters (so the chat doesn't get spammed)
-     *
-     * Appending a new message to the blockchain is as simple as pushing the
-     * new message to the messages array in state
-     */
-    let msgHandler = (state, tx, chainInfo) => {
-        if (
-            typeof tx.sender === 'string' &&
-            typeof tx.message === 'string' &&
-            tx.message.length <= 1000
-        ) {
-            if (tx.message !== '') {
-                state.messages.push({
-                    sender: tx.sender,
-                    message: tx.message
-                });
-            }
-        }
-        console.log(chainInfo);
+  };
+  //   * Create a new instance of Lotion
+  let app = lotion(opts);
+  let msgHandler = (state, tx, chainInfo) => {
+    if (
+      typeof tx.sender === 'string' &&
+      typeof tx.message === 'string' &&
+      tx.message.length <= 1000
+    ) {
+      if (tx.message !== '') {
+        state.messages.push({
+          sender: tx.sender,
+          message: tx.message
+        });
+      }
     }
-    /**
-     * Actually use the middleware handler
-     */
-    app.use(msgHandler);
+  }
+  app.use(msgHandler);
+  // Start the Lotion app
+  const server = app.listen(lotionPort).then(genesis => {
+    console.log(genesis);
+  }, err => {
+    console.log(err);
+  })
 
-    /**
-     * Start the Lotion app
-     */
-    app.listen(lotionPort).then(genesis => {
-        console.log('connected');
-        /**
-         * When a lotion app is started it will run some algorithms based on genesis.json
-         * and initialState (among other things) and generate important data in the directory ~/.lotion
-         */
-        console.log(genesis);
-    }, err => {
-        console.log(err);
+  const socketServer = express().listen(1337)
+
+  const io = socket(socketServer, {
+    origins: '*:*'
+  });
+
+  lastMessagesLength = 0
+  async function updateState() {
+    let {
+      data
+    } = await axios.get('http://localhost:' + lotionPort + '/state')
+    let messages = await data.messages
+    if (messages !== undefined && messages.length > lastMessagesLength) {
+      let newMessages = messages.slice(lastMessagesLength, messages.length)
+      io.sockets.emit('chat', newMessages)
+      lastMessagesLength = messages.length
+    }
+  }
+  io.on('connection', async (socket) => {
+    console.log('made socket connection', socket.id);
+    // on new socket connection emmit all messages
+    try {
+      let {
+        data
+      } = await axios.get('http://localhost:' + lotionPort + '/state')
+      let messages = await data.messages
+      io.sockets.connected[socket.id].emit('chat', messages)
+    } catch (e) {
+      console.log('Error caught:' + e);
+    }
+    //setting Interval to fetch data from local host and send it when new message occurs
+    let interval = setInterval(() => {
+      updateState()
+    }, 50)
+
+    socket.on('disconnect', function() {
+      clearTimeout(interval)
+      console.log('user disconnected');
     })
+  })
 }
 
-process.on('unhandledRejection', function(reason, p){
-    console.log('Please report the following error as a Github Issue on: ')
-    console.log(
-        `
-        Please report the following error as a Github Issue on:
-        https://github.com/devslopes/blockchat
-        `
-    )
-    console.log("Possibly Unhandled Rejection at: Promise ", p, " reason: ", reason);
-    console.trace();
+process.on('unhandledRejection', function(reason, p) {
+  console.log("Possibly Unhandled Rejection at: Promise ", p, " reason: ", reason);
+  console.trace();
 });
 
 main()

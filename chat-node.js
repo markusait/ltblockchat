@@ -1,5 +1,5 @@
 const lotion = require('lotion');
-const lotionPort = 8080;
+const lotionPort = 3010;
 const config = require('./config.js');
 const socket = require('socket.io');
 const express = require('express');
@@ -58,7 +58,7 @@ async function main() {
     console.log(err);
   })
 
-  const socketServer = express().listen(1337)
+  const socketServer = express().listen(8080)
 
   const io = socket(socketServer, {
     origins: '*:*'

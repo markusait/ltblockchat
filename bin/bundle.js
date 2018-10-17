@@ -24823,7 +24823,7 @@ const {
 
 async function main() {
   try {
-    let nodes = ['ws://localhost:46657']
+    let nodes = ['ws://138.201.93.202:46657']
     //all clients share the same genesis file
     let genesis = {
       "app_hash": "b600cc693f96924721e7e55944663e41e6410fe24a1dfbbb9befe8368673a372",
@@ -24940,7 +24940,7 @@ async function main() {
           break
       }
     }
-    let socket = io.connect('http://localhost:1337');
+    let socket = io.connect('http://138.201.93.202:8080');
     let lastMessagesLength = 0
     socket.on('chat', (data) => {
     data.forEach((message) => {

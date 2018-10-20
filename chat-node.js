@@ -14,7 +14,7 @@ async function main() {
         `
   )
   let opts = {
-    peers :  ['149.28.137.69:46656','174.138.6.71:46656'],  
+    peers :  ['149.28.137.69:46656','174.138.6.71:46656'],
     genesis: './genesis.json',
     keys: './priv_validator.json',
     p2pPort: 46656,
@@ -30,10 +30,6 @@ async function main() {
         {
           sender: 'Markus',
           message: 'on the blockchain'
-        },
-        {
-          sender: 'Markus',
-          message: 'watch the blockchain info here:174.138.6.71:46657'
         }
       ]
     }

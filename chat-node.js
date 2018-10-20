@@ -15,7 +15,8 @@ async function main() {
   )
   let opts = {
     // peers = config.peers.map((addr) => `${addr}:46656`),
-    peers :  ['188.106.124.247:46656'],
+    // rays node 
+    peers :  ['174.138.6.71:46656'],
     genesis: './genesis.json',
     keys: './priv_validator2.json',
     p2pPort: 46656,

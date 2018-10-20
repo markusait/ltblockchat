@@ -14,9 +14,9 @@ async function main() {
         `
   )
   let opts = {
-    peers :  ['149.28.137.69:46656','174.138.6.71:46656'],
-    genesis: './genesis.json',
-    keys: './priv_validator.json',
+    // peers :  ['149.28.137.69:46656','174.138.6.71:46656'],
+    // genesis: './genesis.json',
+    // keys: './priv_validator.json',
     p2pPort: 46656,
     tendermintPort: 46657,
     logTendermint: true,

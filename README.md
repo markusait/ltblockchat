@@ -1,6 +1,6 @@
 # LotionTendermintBlockchat
 
-this is a simple chatapp based on lotion and awesome tendermint
+this is a simple chatapp based on lotion anwd awesome tendermint
 
 it is mostly based on this repo: https://github.com/devslopes/blockchat
 
@@ -10,14 +10,14 @@ it is mostly based on this repo: https://github.com/devslopes/blockchat
 
 1. install dependencies
 
-`npm i lotion`
+`npm install`
 
 
-2. switch to branch "node1" on machine A
+2. switch to branch "master" on machine A
 
-3. switch to branch "node2" on machine B
+3. switch to branch "raysnode" on machine B
 
-4. put the ips of each node in config.js 
+4. put the ips of each node in config.js
 
 5. run node chat-node.js on both machines
 

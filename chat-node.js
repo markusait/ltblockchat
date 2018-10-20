@@ -15,9 +15,9 @@ async function main() {
   )
   let opts = {
     // peers = config.peers.map((addr) => `${addr}:46656`),
-    peers :  ['149.28.137.69:46656','188.97.72.128:46656'],
+    peers :  ['188.106.124.247:46656'],
     genesis: './genesis.json',
-    keys: './priv_validator.json',
+    keys: './priv_validator2.json',
     p2pPort: 46656,
     tendermintPort: 46657,
     logTendermint: true,

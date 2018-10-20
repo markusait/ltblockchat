@@ -11,7 +11,8 @@ it is mostly based on this repo: https://github.com/devslopes/blockchat
 1. install dependencies
 
 `npm i lotion`
-
+`npm i socket.io`
+`npm i axios`
 
 2. switch to branch "node1" on machine A
 

@@ -2,8 +2,7 @@
   "app_hash": "b600cc693f96924721e7e55944663e41e6410fe24a1dfbbb9befe8368673a372",
   "chain_id": "test-chain-OgmGOm",
   "genesis_time": "2018-10-07T22:09:10.308916005+02:00",
-  "validators": [
-    {
+  "validators": [{
       "name": "Winkel",
       "power": 10,
       "pub_key": {
@@ -17,6 +16,14 @@
       "pub_key": {
         "type": "AC26791624DE60",
         "value": "zvWcalTUsTI2cMPrQmhE5VZ9+EmCNqHhbQqUynQIwlM="
+      }
+    },
+    {
+      "name": "Digit",
+      "power": 10,
+      "pub_key": {
+        "type": "AC26791624DE60",
+        "value": "bxbhHNB9yRl7Rz1qzS61Bxw5Ht4lVwiNq9d/Hw1wv58="
       }
     }
   ]

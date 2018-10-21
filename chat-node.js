@@ -1,5 +1,5 @@
 const lotion = require('lotion');
-const lotionPort = 3010;
+const lotionPort = 3011;
 const config = require('./config.js');
 const socket = require('socket.io');
 const express = require('express');

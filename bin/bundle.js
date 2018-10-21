@@ -24823,43 +24823,11 @@ const {
 
 async function main() {
   try {
-    let nodes = ['ws://138.201.93.202:46657']
-    //all clients share the same genesis file
-    let genesis = {
-      "app_hash": "b600cc693f96924721e7e55944663e41e6410fe24a1dfbbb9befe8368673a372",
-      "chain_id": "test-chain-OgmGOm",
-      "genesis_time": "2018-10-07T22:09:10.308916005+02:00",
-      "validators": [{
-          "name": "Winkel",
-          "power": 10,
-          "pub_key": {
-            "type": "AC26791624DE60",
-            "value": "hNER7QpFepPULZU1HI4QwEdBrWT0ttCfegggEICt1y8="
-          }
-        },
-        {
-          "name": "Rays",
-          "power": 5,
-          "pub_key": {
-            "type": "AC26791624DE60",
-            "value": "zvWcalTUsTI2cMPrQmhE5VZ9+EmCNqHhbQqUynQIwlM="
-          }
-        },
-        {
-          "name": "Digit",
-          "power": 10,
-          "pub_key": {
-            "type": "AC26791624DE60",
-            "value": "bxbhHNB9yRl7Rz1qzS61Bxw5Ht4lVwiNq9d/Hw1wv58="
-          }
-        }
-      ]
-    }
-    // let { send, state } = await connect(null, { genesis, nodes}); RC send method not working currently
+    let nodes = ['ws://138.201.93.202:46657','ws://149.28.137.69:46657','ws://174.138.6.71:46657']
     let {
       send
     } = await connect(null, {
-      genesis: genesis,
+      genesis: {},
       nodes: nodes
     })
     let chatWindow = document.getElementById('chat-window'),

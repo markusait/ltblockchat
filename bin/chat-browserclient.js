@@ -24,7 +24,7 @@ const {
 
 async function main() {
   try {
-    let nodes = ['ws://138.201.93.202:46657']
+    let nodes = ['ws://138.201.93.202:46657','ws://149.28.137.69:46657','ws://174.138.6.71:46657']
     //all clients share the same genesis file
     let genesis = {
       "app_hash": "b600cc693f96924721e7e55944663e41e6410fe24a1dfbbb9befe8368673a372",

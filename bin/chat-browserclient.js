@@ -31,13 +31,30 @@ async function main() {
       "chain_id": "test-chain-OgmGOm",
       "genesis_time": "2018-10-07T22:09:10.308916005+02:00",
       "validators": [{
-        "name": "Winkel",
-        "power": 10,
-        "pub_key": {
-          "type": "AC26791624DE60",
-          "value": "hNER7QpFepPULZU1HI4QwEdBrWT0ttCfegggEICt1y8="
+          "name": "Winkel",
+          "power": 10,
+          "pub_key": {
+            "type": "AC26791624DE60",
+            "value": "hNER7QpFepPULZU1HI4QwEdBrWT0ttCfegggEICt1y8="
+          }
+        },
+        {
+          "name": "Rays",
+          "power": 5,
+          "pub_key": {
+            "type": "AC26791624DE60",
+            "value": "zvWcalTUsTI2cMPrQmhE5VZ9+EmCNqHhbQqUynQIwlM="
+          }
+        },
+        {
+          "name": "Digit",
+          "power": 10,
+          "pub_key": {
+            "type": "AC26791624DE60",
+            "value": "bxbhHNB9yRl7Rz1qzS61Bxw5Ht4lVwiNq9d/Hw1wv58="
+          }
         }
-      }]
+      ]
     }
     // let { send, state } = await connect(null, { genesis, nodes}); RC send method not working currently
     let {

@@ -9,6 +9,20 @@
 </head>
 
 <body>
+  <div class="block" id="text">
+    <h1 style="color: #575ed8"> Welcome to Tendermint Chat based on <a href="https://lotionjs.com/" style="color: #575ed8"> Lotion </a> </h1>
+    <p>
+      Each message you send is included in a block and you can checkout the blockchai'n's state from either of these 3 nodes:
+    </p>
+    <ul>
+      <li><a href="http://149.28.137.69:46657/">node1 (currently connected to)</a></li>
+      <li><a href="http://174.138.6.71:46657/"> node2</a></li>
+      <li><a href="http://138.201.93.202:46657/">node3</a></li>
+    </ul>
+    <p>
+      This app acts as a lite client and can be run from different tabs. Note that you have to generate Keys first before sending encrypted messages.
+    </p>
+  </div>
   <div class="block" id="signing">
     <h2>Select Transaction Type</h2>
     <div class="select" id="optionSelection">
@@ -45,6 +59,7 @@
     <input id="decryptPassword" type="text" placeholder="Password" />
     <p id="decryptTextOutput"></p>
     <button id="decryptText" class="dct">Decrypt Message</button>
+
 </body>
 
 </html>

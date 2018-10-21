@@ -12,7 +12,7 @@
     },
     {
       "name": "Rays",
-      "power": 10,
+      "power": 5,
       "pub_key": {
         "type": "AC26791624DE60",
         "value": "zvWcalTUsTI2cMPrQmhE5VZ9+EmCNqHhbQqUynQIwlM="

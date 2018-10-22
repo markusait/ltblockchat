@@ -24,7 +24,7 @@ const {
 
 async function main() {
   try {
-    let nodes = ['ws://138.201.93.202:46657','ws://149.28.137.69:46657','ws://174.138.6.71:46657']
+    let nodes = ['ws://138.201.93.202:46657', 'ws://149.28.137.69:46657', 'ws://174.138.6.71:46657']
     let {
       send
     } = await connect(null, {
@@ -64,12 +64,8 @@ async function main() {
     })
     // when user hits enter message is sent
     message.addEventListener('keydown', (e) => {
-      // if(message.value ==='kill node 1'){
-      //    sendMessage(username.value, 'killed node 1/2/3')
-      //
-      //  }
       if (e.keyCode === 13 && message.value.length >= 1 && message.value !== '') {
-        let type = document.getElementById('slct')
+        let type = document.getElementById('slctmsg')
         let messageType = type.options[type.selectedIndex].value
         sendMessage(username.value, message.value, messageType)
         message.value = ""
@@ -78,7 +74,7 @@ async function main() {
     //when user clicks send button message is sent
     btn.addEventListener('click', () => {
       if (message.value.length >= 1 && message.value !== '') {
-        let type = document.getElementById('slct')
+        let type = document.getElementById('slctmsg')
         let messageType = type.options[type.selectedIndex].value
         sendMessage(username.value, message.value, messageType)
         message.value = ""
@@ -126,13 +122,14 @@ async function main() {
           break
       }
     }
-    let socket = io.connect('http://138.201.93.202:8080');
-    let lastMessagesLength = 0
+    async function makeConnection() {
+      let socket = io.connect('http://174.138.6.71:8080/');
+    }
     socket.on('chat', (data) => {
-    data.forEach((message) => {
-      output.innerHTML += '<p class="sender" style="color: black"><strong>' + message.sender + ': </strong>' + message.message + '</p>'
-    })
-    chatWindow.scrollTop = chatWindow.scrollHeight
+      data.forEach((message) => {
+        output.innerHTML += '<p class="sender" style="color: black"><strong>' + message.sender + ': </strong>' + message.message + '</p>'
+      })
+      chatWindow.scrollTop = chatWindow.scrollHeight
     });
   } catch (err) {
     console.log('error occured' + err);

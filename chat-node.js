@@ -95,7 +95,7 @@ async function main() {
 
     socket.on('disconnect', function() {
       clearTimeout(interval)
-      console.log('user disconnected');
+      console.log('user disconnected' + 'total number of users: ' + Object.keys(io.sockets.connected).length);
     })
   })
 }

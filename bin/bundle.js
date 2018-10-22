@@ -24823,7 +24823,8 @@ const {
 
 async function main() {
   try {
-    let nodes = ['ws://138.201.93.202:46657','ws://149.28.137.69:46657','ws://174.138.6.71:46657']
+    // let nodes = ['ws://138.201.93.202:46657','ws://149.28.137.69:46657','ws://174.138.6.71:46657']
+    let nodes = ['ws://localhost:45657']
     let {
       send
     } = await connect(null, {
@@ -24925,7 +24926,8 @@ async function main() {
           break
       }
     }
-    let socket = io.connect('http://138.201.93.202:8080');
+    // let socket = io.connect('http://174.138.6.71:8080/');
+    let socket = io.connect('http://localhost:8080/');
     let lastMessagesLength = 0
     socket.on('chat', (data) => {
     data.forEach((message) => {

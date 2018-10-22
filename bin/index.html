@@ -26,7 +26,7 @@
   <div class="block" id="signing">
     <h2>Select Transaction Type</h2>
     <div class="select" id="optionSelection">
-      <select name="slct" id="slct">
+      <select name="slctmsg" id="slctmsg">
         <option value="chooseOption" id="chooseOption">Choose an option</option>
         <option value="normalMessage" id="normalMessage">Normal message</option>
         <option value="hashMessage" id="hashMessage">Hash Message</option>
@@ -34,10 +34,19 @@
       </select>
     </div>
   </div>
+  <div class="block" id="signing">
+    <h2>Select node you want to connect to</h2>
+    <div class="select" id="optionSelection">
+      <select name="slctnode" id="slctnode">
+        <option value="node1" id="node1"> Node 1 (149.28.137.69)</option>
+        <option value="node2" id="node2"> Node 2 (174.138.6.71) </option>
+        <option value="node3" id="node3"> Node 3 (138.201.93)</option>
+      </select>
+    </div>
+  </div>
   <div class="block" id="cryptoKeys">
     <h2>Private Key</h2>
     <p id="privKeyOutput"> </p>
-    <br />
     <h2>Public Key</h2>
     <p id="pubKeyOutput"> </p>
     <h2>Password</h2>

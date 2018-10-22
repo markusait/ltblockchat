@@ -45,7 +45,36 @@ async function main() {
       inputDecryptText = document.getElementById('inputDecryptText'),
       decryptPassword = document.getElementById('decryptPassword'),
       decryptTextOutput = document.getElementById('decryptTextOutput'),
-      decryptTextButton = document.getElementById('decryptText')
+      decryptTextButton = document.getElementById('decryptText'),
+      slctnode = document.getElementById('slctnode'),
+      connectionStatus = document.getElementById('connectionStatus')
+
+
+    // let socket = io.connect('http://174.138.6.71:8080/');
+    let socket = io.connect('http://138.201.93.202:8080');
+    slctnode.addEventListener('change', function() {
+      if (this.value === '174.138.6.71'){
+        socket.close()
+        socket = io.connect('http://174.138.6.71:8080/');
+      }
+      if (this.value === '138.201.93.202'){
+        socket.close()
+        socket = io.connect('http://138.201.93.202:8080/');
+      }
+      if (this.value === '149.28.137.69'){
+        socket.close()
+        socket = io.connect('http://149.28.137.69:8080/');
+      }
+    })
+    //improve here
+    setInterval(() => {
+      setStatus(socket.connected,socket.io.uri)
+    }, 1000)
+    
+    function setStatus(connected,uri){
+      let subUri = uri.slice(0,uri.length-3)
+      connectionStatus.innerHTML = `Connected : ${connected} | Node:${subUri} `
+    }
 
     decryptTextButton.addEventListener('click', () => {
       let password = decryptPassword.value
@@ -121,9 +150,6 @@ async function main() {
           })
           break
       }
-    }
-    async function makeConnection() {
-      let socket = io.connect('http://174.138.6.71:8080/');
     }
     socket.on('chat', (data) => {
       data.forEach((message) => {

@@ -24823,8 +24823,7 @@ const {
 
 async function main() {
   try {
-    // let nodes = ['ws://138.201.93.202:46657','ws://149.28.137.69:46657','ws://174.138.6.71:46657']
-    let nodes = ['ws://localhost:45657']
+    let nodes = ['ws://138.201.93.202:46657', 'ws://149.28.137.69:46657', 'ws://174.138.6.71:46657']
     let {
       send
     } = await connect(null, {
@@ -24845,7 +24844,36 @@ async function main() {
       inputDecryptText = document.getElementById('inputDecryptText'),
       decryptPassword = document.getElementById('decryptPassword'),
       decryptTextOutput = document.getElementById('decryptTextOutput'),
-      decryptTextButton = document.getElementById('decryptText')
+      decryptTextButton = document.getElementById('decryptText'),
+      slctnode = document.getElementById('slctnode'),
+      connectionStatus = document.getElementById('connectionStatus')
+
+
+    // let socket = io.connect('http://174.138.6.71:8080/');
+    let socket = io.connect('http://138.201.93.202:8080');
+    slctnode.addEventListener('change', function() {
+      if (this.value === '174.138.6.71'){
+        socket.close()
+        socket = io.connect('http://174.138.6.71:8080/');
+      }
+      if (this.value === '138.201.93.202'){
+        socket.close()
+        socket = io.connect('http://138.201.93.202:8080/');
+      }
+      if (this.value === '149.28.137.69'){
+        socket.close()
+        socket = io.connect('http://149.28.137.69:8080/');
+      }
+    })
+    //improve here
+    setInterval(() => {
+      setStatus(socket.connected,socket.io.uri)
+    }, 1000)
+    
+    function setStatus(connected,uri){
+      let subUri = uri.slice(0,uri.length-3)
+      connectionStatus.innerHTML = `Connected : ${connected} | Node:${subUri} `
+    }
 
     decryptTextButton.addEventListener('click', () => {
       let password = decryptPassword.value
@@ -24864,12 +24892,8 @@ async function main() {
     })
     // when user hits enter message is sent
     message.addEventListener('keydown', (e) => {
-      // if(message.value ==='kill node 1'){
-      //    sendMessage(username.value, 'killed node 1/2/3')
-      //
-      //  }
       if (e.keyCode === 13 && message.value.length >= 1 && message.value !== '') {
-        let type = document.getElementById('slct')
+        let type = document.getElementById('slctmsg')
         let messageType = type.options[type.selectedIndex].value
         sendMessage(username.value, message.value, messageType)
         message.value = ""
@@ -24878,7 +24902,7 @@ async function main() {
     //when user clicks send button message is sent
     btn.addEventListener('click', () => {
       if (message.value.length >= 1 && message.value !== '') {
-        let type = document.getElementById('slct')
+        let type = document.getElementById('slctmsg')
         let messageType = type.options[type.selectedIndex].value
         sendMessage(username.value, message.value, messageType)
         message.value = ""
@@ -24926,14 +24950,11 @@ async function main() {
           break
       }
     }
-    // let socket = io.connect('http://174.138.6.71:8080/');
-    let socket = io.connect('http://localhost:8080/');
-    let lastMessagesLength = 0
     socket.on('chat', (data) => {
-    data.forEach((message) => {
-      output.innerHTML += '<p class="sender" style="color: black"><strong>' + message.sender + ': </strong>' + message.message + '</p>'
-    })
-    chatWindow.scrollTop = chatWindow.scrollHeight
+      data.forEach((message) => {
+        output.innerHTML += '<p class="sender" style="color: black"><strong>' + message.sender + ': </strong>' + message.message + '</p>'
+      })
+      chatWindow.scrollTop = chatWindow.scrollHeight
     });
   } catch (err) {
     console.log('error occured' + err);

@@ -70,9 +70,9 @@ async function main() {
     setInterval(() => {
       setStatus(socket.connected,socket.io.uri)
     }, 1000)
-    
+
     function setStatus(connected,uri){
-      let subUri = uri.slice(0,uri.length-3)
+      let subUri = uri.slice(0,uri.length-5)
       connectionStatus.innerHTML = `Connected : ${connected} | Node:${subUri} `
     }
 

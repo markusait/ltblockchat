@@ -50,32 +50,6 @@ async function main() {
       connectionStatus = document.getElementById('connectionStatus')
 
 
-    // let socket = io.connect('http://174.138.6.71:8080/');
-    let socket = io.connect('http://138.201.93.202:8080');
-    slctnode.addEventListener('change', function() {
-      if (this.value === '174.138.6.71'){
-        socket.close()
-        socket = io.connect('http://174.138.6.71:8080/');
-      }
-      if (this.value === '138.201.93.202'){
-        socket.close()
-        socket = io.connect('http://138.201.93.202:8080/');
-      }
-      if (this.value === '149.28.137.69'){
-        socket.close()
-        socket = io.connect('http://149.28.137.69:8080/');
-      }
-    })
-    //improve here
-    setInterval(() => {
-      setStatus(socket.connected,socket.io.uri)
-    }, 1000)
-
-    function setStatus(connected,uri){
-      let subUri = uri.slice(0,uri.length-5)
-      connectionStatus.innerHTML = `Connected : ${connected} | Node:${subUri} `
-    }
-
     decryptTextButton.addEventListener('click', () => {
       let password = decryptPassword.value
       let message = inputDecryptText.value
@@ -151,6 +125,22 @@ async function main() {
           break
       }
     }
+    // innitial Sockete the user is connected to
+    let socket = io.connect('http://138.201.93.202:8080');
+    slctnode.addEventListener('change', function() {
+      socket.close()
+      socket = io.connect(`http://${this.value}:8080/`)
+    })
+    //improve here
+    setInterval(() => {
+      setStatus(socket.connected,socket.io.uri)
+    }, 1000)
+
+    function setStatus(connected,uri){
+      let subUri = uri.slice(0,uri.length-6)
+      connectionStatus.innerHTML = `Connected : ${connected} | Node: ${subUri} `
+    }
+    //chat output
     socket.on('chat', (data) => {
       data.forEach((message) => {
         output.innerHTML += '<p class="sender" style="color: black"><strong>' + message.sender + ': </strong>' + message.message + '</p>'

@@ -24823,7 +24823,8 @@ const {
 
 async function main() {
   try {
-    let nodes = ['ws://138.201.93.202:46657', 'ws://149.28.137.69:46657', 'ws://174.138.6.71:46657']
+    let nodes = ['ws://localhost:46657']
+    // let nodes = ['ws://138.201.93.202:46657', 'ws://149.28.137.69:46657', 'ws://174.138.6.71:46657']
     let {
       send
     } = await connect(null, {
@@ -24925,22 +24926,24 @@ async function main() {
       }
     }
     // innitial Sockete the user is connected to
-    let socket = io.connect('http://138.201.93.202:8080');
-    slctnode.addEventListener('change', function() {
-      socket.close()
-      socket = io.connect(`http://${this.value}:8080/`)
-    })
-    //improve here
-    setInterval(() => {
-      setStatus(socket.connected,socket.io.uri)
-    }, 1000)
-
-    function setStatus(connected,uri){
-      let subUri = uri.slice(0,uri.length-6)
-      connectionStatus.innerHTML = `Connected : ${connected} | Node: ${subUri} `
-    }
+    // let socket = io.connect('http://138.201.93.202:8080/');
+    let socket = io.connect('http://localhost:8080/')
+    // slctnode.addEventListener('change', function() {
+    //   socket.close()
+    //   socket = io.connect(`http://${this.value}:8080/`)
+    // })
+    // //improve here
+    // setInterval(() => {
+    //   setStatus(socket.connected,socket.io.uri)
+    // }, 1000)
+    //
+    // function setStatus(connected,uri){
+    //   let subUri = uri.slice(0,uri.length-6)
+    //   connectionStatus.innerHTML = `Connected : ${connected} | Node: ${subUri} `
+    // }
     //chat output
     socket.on('chat', (data) => {
+      console.log('recieved new data:' + data );
       data.forEach((message) => {
         output.innerHTML += '<p class="sender" style="color: black"><strong>' + message.sender + ': </strong>' + message.message + '</p>'
       })

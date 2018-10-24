@@ -15,9 +15,9 @@
       Each message you send is included in a block and you can checkout the blockchai'n's state from either of these 3 nodes:
     </p>
     <ul>
-      <li><a href="http://149.28.137.69:46657/">node1 (you are currently connected to this node over a socket connection)</a></li>
-      <li><a href="http://174.138.6.71:46657/"> node2</a></li>
-      <li><a href="http://138.201.93.202:46657/">node3</a></li>
+      <li><a href="http://138.201.93.202:46657/">node1 (you are currently connected to this node over a socket connection)</a></li>
+      <li><a href="http://149.28.137.69:46657/"> node2</a></li>
+      <li><a href="http://174.138.6.71:46657/">node3</a></li>
     </ul>
     <p>
       This app acts as a lite client and can be run from different tabs. Note that you have to generate Keys first before sending encrypted messages.
@@ -27,7 +27,6 @@
     <h2>Select Transaction Type</h2>
     <div class="select" id="optionSelection">
       <select name="slctmsg" id="slctmsg">
-        <option value="chooseOption" id="chooseOption">Choose an option</option>
         <option value="normalMessage" id="normalMessage">Normal message</option>
         <option value="hashMessage" id="hashMessage">Hash Message</option>
         <option value="encryptMessage" id="encryptMessage">encrypt Message</option>
@@ -38,9 +37,9 @@
     <h2>Select node you want to connect to</h2>
     <div class="select" id="optionSelection">
       <select name="slctnode" id="slctnode">
-        <option value="138.201.93.202" id="node1"> Node 1(138.201.93.202) </option>
-        <option value="174.138.6.71" id="node2"> Node 2 (174.138.6.71) </option>
-        <option value="149.28.137.69" id="node3"> Node 3 (149.28.137.69)   </option>
+        <option value="0" id="node1"> Node 1(138.201.93.202) </option>
+        <option value="1" id="node2"> Node 2 (149.28.137.69)</option>
+        <option value="2" id="node3"> Node 3 (174.138.6.71) </option>
       </select>
     </div>
     <h2>Connection Status</h2>

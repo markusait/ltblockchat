@@ -24811,19 +24811,16 @@ const {
   encrypt,
   decrypt,
 } = require('./cryptoKeys.js')
-
+const ips = ['138.201.93.202', '149.28.137.69', '174.138.6.71']
+const p2pPort = 46657
+const wsPort = 8080
 //TODO
-// 2. make socket connection that changes only on output
-// 3. connect different nodes
-// search for how to push down nodes!
-//show tendermint log
-// make text for which node to trust
 // find a nice blockexplorer?
 // include this error handling https://stackoverflow.com/questions/951791/javascript-global-error-handling/10556743#10556743
 
 async function main() {
   try {
-    let nodes = ['ws://138.201.93.202:46657', 'ws://149.28.137.69:46657', 'ws://174.138.6.71:46657']
+    let nodes = [`ws://${ips[0]}:${p2pPort}`,`ws://${ips[1]}:${p2pPort}`,`ws://${ips[2]}:${p2pPort}`]
     let {
       send
     } = await connect(null, {
@@ -24847,7 +24844,6 @@ async function main() {
       decryptTextButton = document.getElementById('decryptText'),
       slctnode = document.getElementById('slctnode'),
       connectionStatus = document.getElementById('connectionStatus')
-
 
     decryptTextButton.addEventListener('click', () => {
       let password = decryptPassword.value
@@ -24884,18 +24880,7 @@ async function main() {
     })
 
     async function sendMessage(username, message, messageType) {
-      if (privKeyOutput.textContent === ' ') {
-        alert('generate Keys first')
-        return
-      }
-      let privKey = privKeyOutput.textContent
-      let pubKey = pubKeyOutput.textContent
-      let password = genPassword(pubKey)
       switch (messageType) {
-        case 'chooseOption':
-          option.style.color = 'red'
-          alert('choose an Option')
-          break
         case 'normalMessage':
           await send({
             sender: username,
@@ -24903,20 +24888,21 @@ async function main() {
           })
           break
         case 'hashMessage':
-          let {
-            txHash
-          } = signTx(privKey, {
-            sender: pubKey,
-            message: message
-          })
+          let txHash = hashTx(message).toString('hex')
           await send({
             sender: username,
             message: txHash
           })
           break
         case 'encryptMessage':
+          let privKey = privKeyOutput.textContent
+          let pubKey = pubKeyOutput.textContent
+          let password = passwordOutput.textContent
+          if (privKeyOutput.textContent === ' ') {
+            alert('generate Keys first')
+            return
+          }
           let encText = encrypt(message, password)
-          console.log(encText);
           await send({
             sender: username,
             message: encText
@@ -24924,23 +24910,20 @@ async function main() {
           break
       }
     }
-    // innitial Sockete the user is connected to
-    let socket = io.connect('http://138.201.93.202:8080');
-    slctnode.addEventListener('change', function() {
-      socket.close()
-      socket = io.connect(`http://${this.value}:8080/`)
+    // initial Sockets the user is connected to
+    let sockets = []
+    ips.forEach((node) => {
+      sockets.push(io.connect(`http://${node}:${wsPort}`))
     })
-    //improve here
-    setInterval(() => {
-      setStatus(socket.connected,socket.io.uri)
-    }, 1000)
-
-    function setStatus(connected,uri){
-      let subUri = uri.slice(0,uri.length-6)
-      connectionStatus.innerHTML = `Connected : ${connected} | Node: ${subUri} `
-    }
+    let i = 0;
+    connectionStatus.innerHTML = `Connected : ${sockets[i].connected} | Node: ${sockets[i].io.opts.hostname} `
+    //change the socket output
+    slctnode.addEventListener('change', function() {
+      i = this.value
+      connectionStatus.innerHTML = `Connected : ${sockets[i].connected} | Node: ${sockets[i].io.opts.hostname} `
+    })
     //chat output
-    socket.on('chat', (data) => {
+    sockets[i].on('chat', (data) => {
       data.forEach((message) => {
         output.innerHTML += '<p class="sender" style="color: black"><strong>' + message.sender + ': </strong>' + message.message + '</p>'
       })

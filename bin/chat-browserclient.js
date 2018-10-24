@@ -48,7 +48,9 @@ async function main() {
       decryptTextOutput = document.getElementById('decryptTextOutput'),
       decryptTextButton = document.getElementById('decryptText'),
       slctnode = document.getElementById('slctnode'),
-      connectionStatus = document.getElementById('connectionStatus')
+      connectionStatus = document.getElementById('connectionStatus'),
+      connectSocket = document.getElementById('connectSocket'),
+      disconnectSocket = document.getElementById('disconnectSocket')
 
 
     decryptTextButton.addEventListener('click', () => {
@@ -86,7 +88,7 @@ async function main() {
     })
 
     async function sendMessage(username, message, messageType) {
-      if (privKeyOutput.textContent === ' ') {
+      if (messageType !== 'normalMessage' && privKeyOutput.textContent === ' ') {
         alert('generate Keys first')
         return
       }
@@ -128,7 +130,6 @@ async function main() {
     }
     // innitial Sockete the user is connected to
     // let socket = io.connect('http://138.201.93.202:8080/');
-    let socket = io.connect('http://localhost:8080/')
     // slctnode.addEventListener('change', function() {
     //   socket.close()
     //   socket = io.connect(`http://${this.value}:8080/`)
@@ -137,19 +138,55 @@ async function main() {
     // setInterval(() => {
     //   setStatus(socket.connected,socket.io.uri)
     // }, 1000)
-    //
+    // //
     // function setStatus(connected,uri){
     //   let subUri = uri.slice(0,uri.length-6)
     //   connectionStatus.innerHTML = `Connected : ${connected} | Node: ${subUri} `
     // }
     //chat output
-    socket.on('chat', (data) => {
-      console.log('recieved new data:' + data );
-      data.forEach((message) => {
-        output.innerHTML += '<p class="sender" style="color: black"><strong>' + message.sender + ': </strong>' + message.message + '</p>'
-      })
-      chatWindow.scrollTop = chatWindow.scrollHeight
-    });
+
+    connectSocket.addEventListener('click', () =>{
+      console.log('connect clicked');
+      connectSocketConnection()
+    })
+
+    disconnectSocket.addEventListener('click', () =>{
+      console.log('disconnect clicked');
+      disconnectSocketConnection()
+    })
+
+    async function disconnectSocketConnection () {
+      try{
+        // socket.close()
+        socket.disconnect
+      }catch(e){
+        console.log(e);
+      }
+    }
+    let lastMessagesLength = 0
+    async function connectSocketConnection (){
+      try {
+        let socket = io.connect('http://localhost:8080/')
+        socket.on('chat', (data) => {
+          let currentMessageLength = data.length
+          if(currentMessageLength > lastMessagesLength){
+            let newData = data.slice(lastMessagesLength, currentMessageLength-1)
+            console.log(newData);
+            newData.forEach((message) => {
+              output.innerHTML += '<p class="sender" style="color: black"><strong>' + message.sender + ': </strong>' + message.message + '</p>'
+            })
+            lastMessagesLength = currentMessageLength
+          }
+          chatWindow.scrollTop = chatWindow.scrollHeight
+        });
+        console.log('sucess');
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+
+
   } catch (err) {
     console.log('error occured' + err);
   }

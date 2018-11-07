@@ -24811,9 +24811,10 @@ const {
   encrypt,
   decrypt,
 } = require('./cryptoKeys.js')
-const ips = ['138.201.93.202', '149.28.137.69', '174.138.6.71']
+const ips = ['138.201.93.202', '206.189.97.68', '174.138.6.71']
+// const ips = ['localhost', 'localhost', 'localhost']
 const p2pPort = 46657
-const wsPort = 8080
+const wsPort = 8081
 //TODO
 // find a nice blockexplorer?
 // include this error handling https://stackoverflow.com/questions/951791/javascript-global-error-handling/10556743#10556743

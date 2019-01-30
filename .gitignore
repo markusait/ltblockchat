@@ -1,4 +1,7 @@
 node_modules
 .idea
 .DS_Store
-del1.toml
+resertGuide.md
+
+bin/cryptoKeys.js
+bin/testkeys.js

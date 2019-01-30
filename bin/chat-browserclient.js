@@ -12,7 +12,7 @@ const {
   encrypt,
   decrypt,
 } = require('./cryptoKeys.js')
-const ips = ['138.201.93.202', '206.189.97.68', '174.138.6.71']
+const ips = ['138.201.93.202', '149.28.37.57']
 // const ips = ['localhost', 'localhost', 'localhost']
 const p2pPort = 46657
 const wsPort = 8081
@@ -22,7 +22,7 @@ const wsPort = 8081
 
 async function main() {
   try {
-    let nodes = [`ws://${ips[0]}:${p2pPort}`,`ws://${ips[1]}:${p2pPort}`,`ws://${ips[2]}:${p2pPort}`]
+    let nodes = [`ws://${ips[0]}:${p2pPort}`,`ws://${ips[1]}:${p2pPort}`]
     let {
       send
     } = await connect(null, {

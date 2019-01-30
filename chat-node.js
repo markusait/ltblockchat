@@ -1,10 +1,11 @@
 const lotion = require('lotion');
 const lotionPort = 3010;
 const socketPort = 8081;
-const config = require('./config.js');
+const {peers} = require('./config.js');
 const socket = require('socket.io');
 const express = require('express');
 const axios = require('axios');
+
 
 async function main() {
   console.log('starting a blockchain interface on port ' + lotionPort + '...\n');
@@ -15,7 +16,7 @@ async function main() {
         `
   )
   let opts = {
-    peers :  ['149.28.137.69:46656','174.138.6.71:46656','138.201.93.202:46656'],
+    peers : peers,
     genesis: './genesis.json',
     keys: './priv_validator.json',
     p2pPort: 46656,

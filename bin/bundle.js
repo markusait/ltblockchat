@@ -24811,7 +24811,7 @@ const {
   encrypt,
   decrypt,
 } = require('./cryptoKeys.js')
-const ips = ['138.201.93.202', '206.189.97.68', '174.138.6.71']
+const ips = ['138.201.93.202', '149.28.37.57']
 // const ips = ['localhost', 'localhost', 'localhost']
 const p2pPort = 46657
 const wsPort = 8081
@@ -24821,7 +24821,7 @@ const wsPort = 8081
 
 async function main() {
   try {
-    let nodes = [`ws://${ips[0]}:${p2pPort}`,`ws://${ips[1]}:${p2pPort}`,`ws://${ips[2]}:${p2pPort}`]
+    let nodes = [`ws://${ips[0]}:${p2pPort}`,`ws://${ips[1]}:${p2pPort}`]
     let {
       send
     } = await connect(null, {
@@ -27204,8 +27204,8 @@ function objectToString(o) {
   return Object.prototype.toString.call(o);
 }
 
-}).call(this,{"isBuffer":require("../../../../../../../.nvm/versions/node/v9.0.0/lib/node_modules/browserify/node_modules/is-buffer/index.js")})
-},{"../../../../../../../.nvm/versions/node/v9.0.0/lib/node_modules/browserify/node_modules/is-buffer/index.js":101}],205:[function(require,module,exports){
+}).call(this,{"isBuffer":require("../../../../../../.nvm/versions/node/v9.0.0/lib/node_modules/browserify/node_modules/is-buffer/index.js")})
+},{"../../../../../../.nvm/versions/node/v9.0.0/lib/node_modules/browserify/node_modules/is-buffer/index.js":101}],205:[function(require,module,exports){
 arguments[4][52][0].apply(exports,arguments)
 },{"cipher-base":200,"dup":52,"inherits":264,"md5.js":287,"ripemd160":323,"sha.js":332}],206:[function(require,module,exports){
 /**
@@ -34711,8 +34711,8 @@ exports.isNumberInInterval = function (number, x, y, message) {
   if (number <= x || number >= y) throw RangeError(message)
 }
 
-}).call(this,{"isBuffer":require("../../../../../../../.nvm/versions/node/v9.0.0/lib/node_modules/browserify/node_modules/is-buffer/index.js")})
-},{"../../../../../../../.nvm/versions/node/v9.0.0/lib/node_modules/browserify/node_modules/is-buffer/index.js":101}],327:[function(require,module,exports){
+}).call(this,{"isBuffer":require("../../../../../../.nvm/versions/node/v9.0.0/lib/node_modules/browserify/node_modules/is-buffer/index.js")})
+},{"../../../../../../.nvm/versions/node/v9.0.0/lib/node_modules/browserify/node_modules/is-buffer/index.js":101}],327:[function(require,module,exports){
 'use strict'
 var Buffer = require('safe-buffer').Buffer
 var bip66 = require('bip66')
